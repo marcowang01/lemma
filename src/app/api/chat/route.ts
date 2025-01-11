@@ -1,22 +1,49 @@
-import { openai } from '@ai-sdk/openai';
-import { anthropic } from '@ai-sdk/anthropic';
-import { streamText } from 'ai';
-
-// Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+import { AIMessageChunk } from "@langchain/core/messages"
+import { IterableReadableStream } from "@langchain/core/utils/stream"
+import { ChatOpenAI } from "@langchain/openai"
+export const maxDuration = 60
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const llm = new ChatOpenAI({
+    model: "gpt-4o-mini",
+    temperature: 0,
+  })
 
-  const result = streamText({
-    model: anthropic('claude-3-5-sonnet-20240620'),
-    messages,
-  });
+  const iterator = await llm.stream("Hello! Tell me about yourself.")
 
-  return result.toDataStreamResponse({
-    getErrorMessage: (error) => {
-      console.error(error);
-      return 'An error occurred';
+  const stream = llmIteratorToStream(iterator)
+
+  return new Response(stream)
+}
+
+// https://developer.mozilla.org/docs/Web/API/ReadableStream#convert_async_iterator_to_stream
+function llmIteratorToStream(iterator: IterableReadableStream<AIMessageChunk>) {
+  return new ReadableStream({
+    async pull(controller) {
+      const { value: AIMessageChunk, done } = await iterator.next()
+
+      if (done) {
+        controller.close()
+      } else {
+        const text = AIMessageChunk.content
+        controller.enqueue(text)
+      }
     },
-  });
+  })
+}
+
+function sleep(time: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time)
+  })
+}
+
+const encoder = new TextEncoder()
+
+async function* makeIterator() {
+  yield encoder.encode("<p>One</p>")
+  await sleep(200)
+  yield encoder.encode("<p>Two</p>")
+  await sleep(200)
+  yield encoder.encode("<p>Three</p>")
 }

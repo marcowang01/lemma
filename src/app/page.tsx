@@ -1,13 +1,13 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { useChat } from "ai/react"
 import { Upload } from "lucide-react"
 import { useState } from "react"
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat()
   const [image, setImage] = useState<File | null>(null)
+  const [userInput, setUserInput] = useState<string>("")
+  const [tempText, setTempText] = useState<string>("")
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +23,28 @@ export default function Chat() {
       }
       reader.readAsDataURL(file)
     }
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.target as HTMLFormElement)
+    const stream = await fetch("/api/chat", {
+      method: "POST",
+      body: formData,
+    })
+    const reader = stream.body?.getReader()
+    const decoder = new TextDecoder()
+    let text = ""
+    while (true) {
+      const { done, value } = (await reader?.read()) || { done: true, value: null }
+      if (done) break
+      text += decoder.decode(value, { stream: true })
+      setTempText(text)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInput(e.target.value)
   }
 
   return (
@@ -57,7 +79,7 @@ export default function Chat() {
         <Card className="overflow-hidden">
           <CardContent className="relative aspect-square p-2">
             <div className="stretch mx-auto flex max-w-md flex-col px-2 py-24">
-              {messages.map((m) => (
+              {/* {messages.map((m) => (
                 <div
                   key={m.id}
                   className={`whitespace-pre-wrap rounded-lg p-2 ${
@@ -66,12 +88,12 @@ export default function Chat() {
                 >
                   {m.content}
                 </div>
-              ))}
-
+              ))} */}
+              <div>{tempText}</div>
               <form onSubmit={handleSubmit}>
                 <input
                   className="absolute bottom-0 mb-8 max-w-md rounded border border-gray-300 p-2"
-                  value={input}
+                  value={userInput}
                   placeholder="Say something..."
                   onChange={handleInputChange}
                 />
