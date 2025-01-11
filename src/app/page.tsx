@@ -86,29 +86,23 @@ export default function Chat() {
           </CardContent>
         </Card>
         <Card className="overflow-hidden">
-          <CardContent className="relative aspect-square p-2">
-            <div className="stretch mx-auto flex max-w-md flex-col px-2 py-24">
-              {/* {messages.map((m) => (
-                <div
-                  key={m.id}
-                  className={`whitespace-pre-wrap rounded-lg p-2 ${
-                    m.role === "user" ? "bg-transparent" : "bg-gray-200"
-                  }`}
-                >
-                  {m.content}
-                </div>
-              ))} */}
-              <div>{tempText}</div>
-              <form onSubmit={handleSubmit}>
-                <input
-                  className="absolute bottom-0 mb-8 max-w-md rounded border border-gray-300 p-2"
-                  name="userInput"
-                  value={userInput}
-                  placeholder="Say something..."
-                  onChange={handleInputChange}
-                />
-              </form>
-            </div>
+          <CardContent className="relative flex h-full flex-col p-4">
+            <div className="mb-auto">{tempText}</div>
+            <form onSubmit={handleSubmit} className="flex w-full gap-2">
+              <input
+                className="flex-1 rounded border border-gray-300 p-2"
+                name="userInput"
+                value={userInput}
+                placeholder="Say something..."
+                onChange={handleInputChange}
+              />
+              <button
+                type="submit"
+                className="rounded bg-primary px-4 py-2 text-white hover:bg-primary/90"
+              >
+                Send
+              </button>
+            </form>
           </CardContent>
         </Card>
       </div>
