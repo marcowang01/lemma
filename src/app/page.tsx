@@ -35,6 +35,7 @@ export default function Chat() {
 
     if (!response.ok) {
       console.error("Failed to fetch response", response)
+      setTempText("Failed to fetch response")
       return
     }
 
@@ -101,6 +102,7 @@ export default function Chat() {
               <form onSubmit={handleSubmit}>
                 <input
                   className="absolute bottom-0 mb-8 max-w-md rounded border border-gray-300 p-2"
+                  name="userInput"
                   value={userInput}
                   placeholder="Say something..."
                   onChange={handleInputChange}

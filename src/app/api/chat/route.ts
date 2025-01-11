@@ -4,12 +4,19 @@ import { ChatOpenAI } from "@langchain/openai"
 export const maxDuration = 60
 
 export async function POST(req: Request) {
+  const formData = await req.formData()
+  const userPrompt = formData.get("userInput") as string
+
+  if (!userPrompt) {
+    return new Response("No user prompt provided", { status: 400 })
+  }
+
   const llm = new ChatOpenAI({
     model: "gpt-4o-mini",
     temperature: 0,
   })
 
-  const iterator = await llm.stream("Hello! Tell me about yourself.")
+  const iterator = await llm.stream(userPrompt)
 
   const stream = llmIteratorToStream(iterator)
 
@@ -30,20 +37,4 @@ function llmIteratorToStream(iterator: IterableReadableStream<AIMessageChunk>) {
       }
     },
   })
-}
-
-function sleep(time: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, time)
-  })
-}
-
-const encoder = new TextEncoder()
-
-async function* makeIterator() {
-  yield encoder.encode("<p>One</p>")
-  await sleep(200)
-  yield encoder.encode("<p>Two</p>")
-  await sleep(200)
-  yield encoder.encode("<p>Three</p>")
 }
