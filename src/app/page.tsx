@@ -27,7 +27,6 @@ export default function Chat() {
 
   return (
     <main className="container mx-auto max-w-4xl p-4">
-      <h1 className="mb-8 text-center text-3xl font-bold">Math Problem Solver</h1>
       <div className="grid gap-8 md:grid-cols-2">
         <Card className="overflow-hidden">
           <CardContent className="relative aspect-square p-0">
