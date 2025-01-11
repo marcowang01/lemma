@@ -28,16 +28,24 @@ export default function Chat() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.target as HTMLFormElement)
-    const stream = await fetch("/api/chat", {
+    const response = await fetch("/api/chat", {
       method: "POST",
       body: formData,
     })
-    const reader = stream.body?.getReader()
+
+    if (!response.ok) {
+      console.error("Failed to fetch response", response)
+      return
+    }
+
+    const reader = response.body!.getReader()
     const decoder = new TextDecoder()
     let text = ""
     while (true) {
-      const { done, value } = (await reader?.read()) || { done: true, value: null }
-      if (done) break
+      const { done, value } = await reader.read()
+      if (done) {
+        break
+      }
       text += decoder.decode(value, { stream: true })
       setTempText(text)
     }
