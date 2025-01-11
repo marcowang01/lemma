@@ -16,6 +16,13 @@ export default function Chat() {
     if (file) {
       setImage(file)
       setImageUrl(URL.createObjectURL(file))
+      // Add image to conversation history
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        const base64String = reader.result as string
+        console.log(base64String)
+      }
+      reader.readAsDataURL(file)
     }
   }
 
