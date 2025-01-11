@@ -87,7 +87,7 @@ export default function Chat() {
         </Card>
         <Card className="overflow-hidden">
           <CardContent className="relative flex h-full flex-col p-4">
-            <div className="mb-auto">{tempText}</div>
+            <div className="mb-auto whitespace-pre-wrap">{tempText}</div>
             <form onSubmit={handleSubmit} className="flex w-full gap-2">
               <input
                 className="flex-1 rounded border border-gray-300 p-2"

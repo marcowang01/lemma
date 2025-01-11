@@ -4,6 +4,7 @@
 - refine prompt + UI to showcase steps and reasoning
 - add support for image input
 - input validation and error handling
+- latex rendering
 
 ## Stretch
 - ask follow up questions
