@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useChat } from "ai/react"
 import { Upload } from "lucide-react"
 import { useState } from "react"
-import { clsx } from "clsx"
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit } = useChat()
@@ -32,10 +31,10 @@ export default function Chat() {
       <div className="grid gap-8 md:grid-cols-2">
         <Card className="overflow-hidden">
           <CardContent className="relative aspect-square p-0">
-            <img 
-              src={imageUrl ?? "placeholder.jpg"} 
-              alt="Math problem" 
-              className={`h-full w-full object-cover ${!imageUrl ? 'opacity-20' : ''}`} 
+            <img
+              src={imageUrl ?? "placeholder.jpg"}
+              alt="Math problem"
+              className={`h-full w-full object-cover ${!imageUrl ? "opacity-20" : ""}`}
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <input
@@ -58,7 +57,7 @@ export default function Chat() {
         </Card>
         <Card className="overflow-hidden">
           <CardContent className="relative aspect-square p-2">
-            <div className="stretch mx-auto px-2 flex max-w-md flex-col py-24">
+            <div className="stretch mx-auto flex max-w-md flex-col px-2 py-24">
               {messages.map((m) => (
                 <div
                   key={m.id}
