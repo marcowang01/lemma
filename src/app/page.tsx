@@ -11,7 +11,6 @@ export default function Chat() {
   const [image, setImage] = useState<File | null>(null)
   const [userInput, setUserInput] = useState<string>("")
   const [tempText, setTempText] = useState<string>("") // Final rendered HTML
-  const [rawText, setRawText] = useState<string>("") // Raw text from server
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   // (Optional) Marked configuration. Basic usage suffices here.
@@ -88,7 +87,7 @@ export default function Chat() {
 
   return (
     <main className="container mx-auto max-w-6xl p-4">
-      <div className="grid gap-8 md:grid-cols-3">
+      <div className="grid gap-8 md:grid-cols-2">
         {/* Image Upload / Preview */}
         <Card className="overflow-hidden">
           <CardContent className="relative aspect-square p-0">
@@ -139,13 +138,6 @@ export default function Chat() {
                 Send
               </button>
             </form>
-          </CardContent>
-        </Card>
-
-        {/* Debug Raw Text Output */}
-        <Card className="overflow-hidden">
-          <CardContent className="relative flex h-full flex-col p-4">
-            <div className="mb-auto h-full w-full whitespace-pre-wrap">{rawText}</div>
           </CardContent>
         </Card>
       </div>
