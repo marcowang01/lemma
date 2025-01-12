@@ -33,6 +33,8 @@ export default function Chat() {
       body: formData,
     })
 
+    setUserInput("")
+
     if (!response.ok) {
       console.error("Failed to fetch response", response)
       setTempText("Failed to fetch response")

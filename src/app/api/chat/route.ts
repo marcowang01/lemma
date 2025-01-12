@@ -1,4 +1,5 @@
-import { AIMessageChunk } from "@langchain/core/messages"
+import { getSystemPrompt } from "@/lib/prompts"
+import { AIMessageChunk, HumanMessage, SystemMessage } from "@langchain/core/messages"
 import { IterableReadableStream } from "@langchain/core/utils/stream"
 import { ChatOpenAI } from "@langchain/openai"
 export const maxDuration = 60
@@ -16,7 +17,10 @@ export async function POST(req: Request) {
     temperature: 0,
   })
 
-  const iterator = await llm.stream(userPrompt)
+  const iterator = await llm.stream([
+    new SystemMessage(getSystemPrompt()),
+    new HumanMessage(userPrompt),
+  ])
 
   const stream = llmIteratorToStream(iterator)
 
