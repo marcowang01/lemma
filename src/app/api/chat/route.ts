@@ -1,7 +1,9 @@
 import { getSystemPrompt } from "@/lib/prompts"
+import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
 import { AIMessageChunk, HumanMessage, SystemMessage } from "@langchain/core/messages"
 import { IterableReadableStream } from "@langchain/core/utils/stream"
 import { ChatOpenAI } from "@langchain/openai"
+
 export const maxDuration = 60
 
 export async function POST(req: Request) {
@@ -13,11 +15,21 @@ export async function POST(req: Request) {
   }
 
   const llm = new ChatOpenAI({
-    model: "gpt-4o",
+    model: "gpt-4o-mini",
     temperature: 0,
   })
 
-  const iterator = await llm.stream([
+  const wolframAlphaTool = new WolframAlphaTool({
+    appid: process.env.WOLFRAM_ALPHA_APP_ID ?? "",
+  })
+
+  wolframAlphaTool.name = "wolfram-alpha"
+  wolframAlphaTool.description =
+    "Use this tool to answer questions about math, science, and other topics."
+
+  const llmWithTools = llm.bindTools([wolframAlphaTool])
+
+  const iterator = await llmWithTools.stream([
     new SystemMessage(getSystemPrompt()),
     new HumanMessage(userPrompt),
   ])
@@ -31,12 +43,13 @@ export async function POST(req: Request) {
 function llmIteratorToStream(iterator: IterableReadableStream<AIMessageChunk>) {
   return new ReadableStream({
     async pull(controller) {
-      const { value: AIMessageChunk, done } = await iterator.next()
+      const { value , done }: { value: AIMessageChunk, done?: boolean } = await iterator.next()
 
       if (done) {
         controller.close()
       } else {
-        const text = AIMessageChunk.content
+        const text = value.content
+        console.log(value)
         controller.enqueue(text)
       }
     },
