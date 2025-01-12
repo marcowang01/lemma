@@ -2,41 +2,91 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import DOMPurify from "dompurify"
+import katex from "katex"
 import { Upload } from "lucide-react"
 import { marked } from "marked"
 import { useEffect, useState } from "react"
-import katex from "katex"
+
+// 1) Convert \(...\) --> $...$ and \[...\] --> $$...$$ in raw text
+function replaceLatexDelimiters(raw: string): string {
+  // Inline math: \(...\) => $...$
+  let out = raw.replaceAll("\\(", "$").replaceAll("\\)", "$")
+
+  // Block math: \[...\] => $$...$$
+  out = out.replaceAll("\\[", "$$").replaceAll("\\]", "$$")
+  return out
+}
+
+// 2) After Marked parses to HTML, find $...$ and $$...$$ and render with KaTeX
+function convertDollarsToKatex(html: string): string {
+  // Handle $$...$$ first (non-greedy, across multiple lines if needed)
+  html = html.replace(/\$\$([\s\S]+?)\$\$/g, (_, math) => {
+    try {
+      const cleanedMath = math.replace(/<br\s*\/?>/g, "")
+      return katex.renderToString(cleanedMath, { displayMode: true })
+    } catch (err) {
+      console.error("KaTeX block render error:", err)
+      return `<span style="color: red;">Invalid block math: ${math}</span>`
+    }
+  })
+
+  // Then handle $...$ (non-greedy, across multiple lines if needed)
+  html = html.replace(/\$([\s\S]+?)\$/g, (_, math) => {
+    try {
+      const cleanedMath = math.replace(/<br\s*\/?>/g, "")
+
+      return katex.renderToString(cleanedMath, { displayMode: false })
+    } catch (err) {
+      console.error("KaTeX inline render error:", err)
+      return `<span style="color: red;">Invalid inline math: ${math}</span>`
+    }
+  })
+
+  return html
+}
 
 export default function Chat() {
   const [image, setImage] = useState<File | null>(null)
   const [userInput, setUserInput] = useState<string>("")
-  const [tempText, setTempText] = useState<string>("")
-  const [rawText, setRawText] = useState<string>("")
+  const [tempText, setTempText] = useState<string>("") // Final rendered HTML
+  const [rawText, setRawText] = useState<string>("") // Raw text from server
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
+  // (Optional) Marked configuration. Basic usage suffices here.
+  useEffect(() => {
+    marked.setOptions({
+      gfm: true,
+      breaks: true,
+    })
+  }, [])
+
+  // Handle image upload
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       setImage(file)
       setImageUrl(URL.createObjectURL(file))
-      // Add image to conversation history
+
       const reader = new FileReader()
       reader.onloadend = () => {
         const base64String = reader.result as string
-        console.log(base64String)
+        console.log("Image base64:", base64String)
       }
       reader.readAsDataURL(file)
     }
   }
 
+  // Submit the user's message + image (if any) to /api/chat
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.target as HTMLFormElement)
+
     const response = await fetch("/api/chat", {
       method: "POST",
       body: formData,
     })
 
+    // Clear user input
     setUserInput("")
 
     if (!response.ok) {
@@ -48,14 +98,30 @@ export default function Chat() {
     const reader = response.body!.getReader()
     const decoder = new TextDecoder()
     let text = ""
+
     while (true) {
       const { done, value } = await reader.read()
       if (done) {
         break
       }
+
       text += decoder.decode(value, { stream: true })
-      setTempText(DOMPurify.sanitize(marked.parse(text) as string))
-      setRawText(text)
+
+      // 1) Replace \(...\)/\[...\] in the new text chunk
+      const replaced = replaceLatexDelimiters(text)
+
+      // 2) Convert to HTML with Marked
+      const markdownHtml = marked.parse(replaced) as string
+
+      // 3) Convert $...$ / $$...$$ to KaTeX
+      const katexHtml = convertDollarsToKatex(markdownHtml)
+
+      setRawText(markdownHtml)
+
+      // 4) Sanitize the final HTML for safety
+      const safeHtml = DOMPurify.sanitize(katexHtml)
+
+      setTempText(safeHtml)
     }
   }
 
@@ -66,6 +132,7 @@ export default function Chat() {
   return (
     <main className="container mx-auto max-w-6xl p-4">
       <div className="grid gap-8 md:grid-cols-3">
+        {/* Image Upload / Preview */}
         <Card className="overflow-hidden">
           <CardContent className="relative aspect-square p-0">
             <img
@@ -92,12 +159,14 @@ export default function Chat() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Render Marked + KaTeX HTML */}
         <Card className="overflow-hidden">
           <CardContent className="relative flex h-full flex-col p-4">
             <div
-              className="mb-auto whitespace-pre-wrap h-full w-full markdown"
+              className="markdown mb-auto h-full w-full whitespace-pre-wrap"
               dangerouslySetInnerHTML={{ __html: tempText }}
-            ></div>
+            />
             <form onSubmit={handleSubmit} className="flex w-full gap-2">
               <input
                 className="flex-1 rounded border border-gray-300 p-2"
@@ -115,13 +184,11 @@ export default function Chat() {
             </form>
           </CardContent>
         </Card>
+
+        {/* Debug Raw Text Output */}
         <Card className="overflow-hidden">
           <CardContent className="relative flex h-full flex-col p-4">
-            <div
-              className="mb-auto whitespace-pre-wrap h-full w-full"
-            >
-              {rawText}
-            </div>
+            <div className="mb-auto h-full w-full whitespace-pre-wrap">{rawText}</div>
           </CardContent>
         </Card>
       </div>
