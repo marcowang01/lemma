@@ -1,13 +1,17 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
+import DOMPurify from "dompurify"
 import { Upload } from "lucide-react"
-import { useState } from "react"
+import { marked } from "marked"
+import { useEffect, useState } from "react"
+import katex from "katex"
 
 export default function Chat() {
   const [image, setImage] = useState<File | null>(null)
   const [userInput, setUserInput] = useState<string>("")
   const [tempText, setTempText] = useState<string>("")
+  const [rawText, setRawText] = useState<string>("")
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +54,8 @@ export default function Chat() {
         break
       }
       text += decoder.decode(value, { stream: true })
-      setTempText(text)
+      setTempText(DOMPurify.sanitize(marked.parse(text) as string))
+      setRawText(text)
     }
   }
 
@@ -59,8 +64,8 @@ export default function Chat() {
   }
 
   return (
-    <main className="container mx-auto max-w-4xl p-4">
-      <div className="grid gap-8 md:grid-cols-2">
+    <main className="container mx-auto max-w-6xl p-4">
+      <div className="grid gap-8 md:grid-cols-3">
         <Card className="overflow-hidden">
           <CardContent className="relative aspect-square p-0">
             <img
@@ -89,7 +94,10 @@ export default function Chat() {
         </Card>
         <Card className="overflow-hidden">
           <CardContent className="relative flex h-full flex-col p-4">
-            <div className="mb-auto whitespace-pre-wrap">{tempText}</div>
+            <div
+              className="mb-auto whitespace-pre-wrap h-full w-full markdown"
+              dangerouslySetInnerHTML={{ __html: tempText }}
+            ></div>
             <form onSubmit={handleSubmit} className="flex w-full gap-2">
               <input
                 className="flex-1 rounded border border-gray-300 p-2"
@@ -105,6 +113,15 @@ export default function Chat() {
                 Send
               </button>
             </form>
+          </CardContent>
+        </Card>
+        <Card className="overflow-hidden">
+          <CardContent className="relative flex h-full flex-col p-4">
+            <div
+              className="mb-auto whitespace-pre-wrap h-full w-full"
+            >
+              {rawText}
+            </div>
           </CardContent>
         </Card>
       </div>
