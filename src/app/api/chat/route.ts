@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   }
 
   const llm = new ChatOpenAI({
-    model: "gpt-4o-mini",
+    model: "gpt-4o",
     temperature: 0,
   })
 

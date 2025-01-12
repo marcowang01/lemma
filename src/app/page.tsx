@@ -1,49 +1,11 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
+import { renderLatex } from "@/lib/latex"
 import DOMPurify from "dompurify"
-import katex from "katex"
 import { Upload } from "lucide-react"
 import { marked } from "marked"
 import { useEffect, useState } from "react"
-
-// 1) Convert \(...\) --> $...$ and \[...\] --> $$...$$ in raw text
-function replaceLatexDelimiters(raw: string): string {
-  // Inline math: \(...\) => $...$
-  let out = raw.replaceAll("\\(", "$").replaceAll("\\)", "$")
-
-  // Block math: \[...\] => $$...$$
-  out = out.replaceAll("\\[", "$$").replaceAll("\\]", "$$")
-  return out
-}
-
-// 2) After Marked parses to HTML, find $...$ and $$...$$ and render with KaTeX
-function convertDollarsToKatex(html: string): string {
-  // Handle $$...$$ first (non-greedy, across multiple lines if needed)
-  html = html.replace(/\$\$([\s\S]+?)\$\$/g, (_, math) => {
-    try {
-      const cleanedMath = math.replace(/<br\s*\/?>/g, "")
-      return katex.renderToString(cleanedMath, { displayMode: true })
-    } catch (err) {
-      console.error("KaTeX block render error:", err)
-      return `<span style="color: red;">Invalid block math: ${math}</span>`
-    }
-  })
-
-  // Then handle $...$ (non-greedy, across multiple lines if needed)
-  html = html.replace(/\$([\s\S]+?)\$/g, (_, math) => {
-    try {
-      const cleanedMath = math.replace(/<br\s*\/?>/g, "")
-
-      return katex.renderToString(cleanedMath, { displayMode: false })
-    } catch (err) {
-      console.error("KaTeX inline render error:", err)
-      return `<span style="color: red;">Invalid inline math: ${math}</span>`
-    }
-  })
-
-  return html
-}
 
 export default function Chat() {
   const [image, setImage] = useState<File | null>(null)
@@ -107,19 +69,14 @@ export default function Chat() {
 
       text += decoder.decode(value, { stream: true })
 
-      // 1) Replace \(...\)/\[...\] in the new text chunk
-      const replaced = replaceLatexDelimiters(text)
+      // 1) Render LaTeX first
+      let processedText = renderLatex(text)
 
-      // 2) Convert to HTML with Marked
-      const markdownHtml = marked.parse(replaced) as string
+      // 2) Pass the result through Marked to parse Markdown
+      const markdownHtml = marked.parse(processedText) as string
 
-      // 3) Convert $...$ / $$...$$ to KaTeX
-      const katexHtml = convertDollarsToKatex(markdownHtml)
-
-      setRawText(markdownHtml)
-
-      // 4) Sanitize the final HTML for safety
-      const safeHtml = DOMPurify.sanitize(katexHtml)
+      // 3) Sanitize the final HTML for safety
+      const safeHtml = DOMPurify.sanitize(markdownHtml)
 
       setTempText(safeHtml)
     }
