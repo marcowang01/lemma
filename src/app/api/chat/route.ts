@@ -1,8 +1,15 @@
 import { getSystemPrompt } from "@/lib/prompts"
 import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
-import { AIMessageChunk, HumanMessage, SystemMessage } from "@langchain/core/messages"
-import { IterableReadableStream } from "@langchain/core/utils/stream"
+import {
+  AIMessage,
+  AIMessageChunk,
+  HumanMessage,
+  SystemMessage,
+  ToolMessage,
+} from "@langchain/core/messages"
+import { concat } from "@langchain/core/utils/stream"
 import { ChatOpenAI } from "@langchain/openai"
+import { z } from "zod"
 
 export const maxDuration = 60
 
@@ -22,36 +29,92 @@ export async function POST(req: Request) {
   const wolframAlphaTool = new WolframAlphaTool({
     appid: process.env.WOLFRAM_ALPHA_APP_ID ?? "",
   })
-
   wolframAlphaTool.name = "wolfram-alpha"
   wolframAlphaTool.description =
-    "Use this tool to answer questions about math, science, and other topics."
+    "Use this tool to answer questions about math, science, and other topics. you must provide an input to the tool which represents the query you want to use the tool to evaluate."
+  wolframAlphaTool.schema = z
+    .object({
+      input: z.string().optional().describe("The input to the tool"),
+    })
+    .transform((data) => data.input)
 
   const llmWithTools = llm.bindTools([wolframAlphaTool])
 
-  const iterator = await llmWithTools.stream([
-    new SystemMessage(getSystemPrompt()),
-    new HumanMessage(userPrompt),
-  ])
+  const conversation = [new SystemMessage(getSystemPrompt()), new HumanMessage(userPrompt)]
 
-  const stream = llmIteratorToStream(iterator)
+  async function* handleLLMStream() {
+    while (true) {
+      const iterator = await llmWithTools.stream(conversation)
+      let gathered: AIMessageChunk | undefined = undefined
 
-  return new Response(stream)
-}
+      for await (const chunk of iterator) {
+        console.log(`Chunk: ${JSON.stringify(chunk, null, 2)}`)
 
-// https://developer.mozilla.org/docs/Web/API/ReadableStream#convert_async_iterator_to_stream
-function llmIteratorToStream(iterator: IterableReadableStream<AIMessageChunk>) {
-  return new ReadableStream({
-    async pull(controller) {
-      const { value , done }: { value: AIMessageChunk, done?: boolean } = await iterator.next()
-
-      if (done) {
-        controller.close()
-      } else {
-        const text = value.content
-        console.log(value)
-        controller.enqueue(text)
+        // Stream content back to the client
+        if (chunk.content) {
+          yield chunk.content
+        }
+        gathered = gathered !== undefined ? concat(gathered, chunk) : chunk
       }
+
+      // Finalize AI message with accumulated content
+      if (gathered) {
+        conversation.push(gathered)
+      }
+
+      if (!gathered?.tool_calls || gathered?.tool_calls?.length === 0) {
+        // No more tool calls, stop iteration
+        console.log("No more tool calls, stopping iteration")
+        break
+      }
+
+      console.log(`Tool calls: ${JSON.stringify(gathered?.tool_calls)}`)
+
+      // Process each tool call
+      for (const toolCall of gathered.tool_calls) {
+        if (toolCall.name === "wolfram-alpha") {
+          try {
+            const toolMessage = (await wolframAlphaTool.invoke(toolCall)) as ToolMessage
+
+            console.log(
+              `Tool message: ${JSON.stringify(toolMessage)}, tool call: ${JSON.stringify(toolCall)}`
+            )
+
+            conversation.push(toolMessage)
+            yield `<span style="color: green;">Tool result: ${toolMessage.content}</span>`
+          } catch (error) {
+            console.error("Tool invocation error:", error)
+            yield `<span style="color: red;">Tool invocation failed: ${String(error)}</span>`
+          }
+        } else {
+          console.error("Unknown tool call:", toolCall.name)
+          yield `<span style="color: red;">Unknown tool: ${toolCall.name}</span>`
+        }
+      }
+    }
+  }
+
+  // Convert async generator to ReadableStream
+  const stream = new ReadableStream({
+    async pull(controller) {
+      const iterator = handleLLMStream()
+      try {
+        const { value, done } = await iterator.next()
+        if (done) {
+          controller.close()
+        } else {
+          controller.enqueue(value)
+        }
+      } catch (err) {
+        console.error("Stream error:", err)
+        controller.close()
+      }
+    },
+  })
+
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
     },
   })
 }
