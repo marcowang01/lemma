@@ -49,18 +49,16 @@ export async function POST(req: Request) {
 
   // Convert async generator to ReadableStream
   const stream = new ReadableStream({
-    async pull(controller) {
-      const iterator = handleLLMStream(conversation, llmWithTools, wolframAlphaTool)
+    async start(controller) {
       try {
-        const { value, done } = await iterator.next()
-        if (done) {
-          controller.close()
-        } else {
-          controller.enqueue(value)
+        const generator = handleLLMStream(conversation, llmWithTools, wolframAlphaTool)
+        for await (const chunk of generator) {
+          controller.enqueue(chunk)
         }
+        controller.close()
       } catch (err) {
         console.error("Stream error:", err)
-        controller.close()
+        controller.error(err)
       }
     },
   })
@@ -79,7 +77,7 @@ async function* handleLLMStream(
 ) {
   while (true) {
     console.log(
-      `\nConversation: ${JSON.stringify(
+      `\nConversation start: ${JSON.stringify(
         conversation.map((c) => c.getType()),
         null,
         2
