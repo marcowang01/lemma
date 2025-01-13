@@ -1,17 +1,9 @@
 import { getSystemPrompt } from "@/lib/prompts"
 import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
-import { BaseLanguageModelInput } from "@langchain/core/language_models/base"
-import {
-  AIMessageChunk,
-  BaseMessage,
-  HumanMessage,
-  SystemMessage,
-  ToolMessage,
-} from "@langchain/core/messages"
-import { Runnable } from "@langchain/core/runnables"
-import { concat } from "@langchain/core/utils/stream"
-import { ChatOpenAI, ChatOpenAICallOptions } from "@langchain/openai"
+import { BaseMessage, HumanMessage, SystemMessage } from "@langchain/core/messages"
+import { ChatOpenAI } from "@langchain/openai"
 import { z } from "zod"
+import { handleLLMStream } from "./stream"
 
 export const maxDuration = 60
 
@@ -68,53 +60,4 @@ export async function POST(req: Request) {
       "Content-Type": "text/plain; charset=utf-8",
     },
   })
-}
-
-async function* handleLLMStream(
-  conversation: BaseMessage[],
-  llmWithTools: Runnable<BaseLanguageModelInput, AIMessageChunk, ChatOpenAICallOptions>,
-  wolframAlphaTool: WolframAlphaTool
-) {
-  while (true) {
-    const iterator = await llmWithTools.stream(conversation)
-    let gathered: AIMessageChunk | undefined = undefined
-
-    for await (const chunk of iterator) {
-      // Stream content back to the client
-      if (chunk.tool_calls?.length === 0 && chunk.content && chunk.getType() === "ai") {
-        yield chunk.content
-      }
-      gathered = gathered !== undefined ? concat(gathered, chunk) : chunk
-    }
-
-    console.log(`iteration done Gathered: ${JSON.stringify(gathered, null, 2)}`)
-
-    // Finalize AI message with accumulated content
-    if (gathered) {
-      conversation.push(gathered)
-    }
-
-    if (!gathered?.tool_calls || gathered?.tool_calls?.length === 0) {
-      // No more tool calls, stop iteration
-      console.log("No more tool calls, stopping iteration")
-      break
-    }
-
-    // Process each tool call
-    for (const toolCall of gathered.tool_calls) {
-      if (toolCall.name === "wolfram-alpha") {
-        try {
-          const toolMessage = (await wolframAlphaTool.invoke(toolCall)) as ToolMessage
-
-          conversation.push(toolMessage)
-        } catch (error) {
-          console.error("Tool invocation error:", error)
-          yield `<span style="color: red;">Tool invocation failed: ${String(error)}</span>`
-        }
-      } else {
-        console.error("Unknown tool call:", toolCall.name)
-        yield `<span style="color: red;">Unknown tool: ${toolCall.name}</span>`
-      }
-    }
-  }
 }
