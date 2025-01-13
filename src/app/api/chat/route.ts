@@ -76,20 +76,12 @@ async function* handleLLMStream(
   wolframAlphaTool: WolframAlphaTool
 ) {
   while (true) {
-    console.log(
-      `\nConversation start: ${JSON.stringify(
-        conversation.map((c) => c.getType()),
-        null,
-        2
-      )}`
-    )
     const iterator = await llmWithTools.stream(conversation)
     let gathered: AIMessageChunk | undefined = undefined
 
     for await (const chunk of iterator) {
       // Stream content back to the client
       if (chunk.tool_calls?.length === 0 && chunk.content && chunk.getType() === "ai") {
-        console.log(`Chunk content: ${JSON.stringify(chunk, null, 2)}`)
         yield chunk.content
       }
       gathered = gathered !== undefined ? concat(gathered, chunk) : chunk
@@ -99,7 +91,6 @@ async function* handleLLMStream(
 
     // Finalize AI message with accumulated content
     if (gathered) {
-      // console.log(`Gathered: ${JSON.stringify(gathered, null, 2)}`)
       conversation.push(gathered)
     }
 
@@ -109,20 +100,13 @@ async function* handleLLMStream(
       break
     }
 
-    // console.log(`Tool calls: ${JSON.stringify(gathered?.tool_calls, null, 2)}`)
-
     // Process each tool call
     for (const toolCall of gathered.tool_calls) {
       if (toolCall.name === "wolfram-alpha") {
         try {
           const toolMessage = (await wolframAlphaTool.invoke(toolCall)) as ToolMessage
 
-          // console.log(
-          //   `Tool message: ${JSON.stringify(toolMessage, null, 2)}, tool call: ${JSON.stringify(toolCall, null, 2)}`
-          // )
-
           conversation.push(toolMessage)
-          // yield `<span style="color: green;">Tool result: ${toolMessage.content}</span>`
         } catch (error) {
           console.error("Tool invocation error:", error)
           yield `<span style="color: red;">Tool invocation failed: ${String(error)}</span>`
