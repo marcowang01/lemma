@@ -91,7 +91,7 @@ export default function Chat() {
       <div className="grid gap-8 md:grid-cols-1">
         {/* Image Upload / Preview */}
         <Card className="overflow-hidden">
-          <CardContent className="relative aspect-video p-0">
+          <CardContent className="relative w-full h-[100px] p-0">
             <img
               src={imageUrl ?? "placeholder.jpg"}
               alt="Math problem"
@@ -121,7 +121,7 @@ export default function Chat() {
         <Card className="overflow-hidden">
           <CardContent className="relative flex h-full flex-col p-4">
             <div
-              className="markdown mb-auto h-full w-full whitespace-pre-wrap"
+              className="markdown mb-auto h-full w-full"
               dangerouslySetInnerHTML={{ __html: tempText }}
             />
             <form onSubmit={handleSubmit} className="flex w-full gap-2">
