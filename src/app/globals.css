@@ -72,71 +72,83 @@ body {
   }
 }
 
+.markdown {
+  @apply px-4 py-2; /* Add general padding to the markdown container */
+}
+
 .markdown h1 {
-  @apply text-2xl font-bold mb-2 mt-3;
+  @apply text-2xl font-bold mb-4 mt-6;
 }
 
 .markdown h2 {
-  @apply text-xl font-bold mb-1.5 mt-2.5;
+  @apply text-xl font-bold mb-3 mt-5;
 }
 
 .markdown h3 {
-  @apply text-lg font-bold mb-1 mt-2;
+  @apply text-lg font-bold mb-2 mt-4;
 }
 
 .markdown h4 {
-  @apply text-base font-bold mb-1 mt-1.5;
+  @apply text-base font-bold mb-2 mt-3;
 }
 
 .markdown code {
-  @apply bg-gray-100 rounded-md p-0.5 text-sm font-mono;
+  @apply bg-gray-100 rounded-md px-1.5 py-0.5 text-sm font-mono;
 }
 
 .markdown pre {
-  @apply bg-gray-100 rounded-lg p-2 my-2 overflow-x-auto;
+  @apply bg-gray-100 rounded-lg p-4 my-4 overflow-x-auto;
 }
 
 .markdown blockquote {
-  @apply border-l-2 border-gray-300 pl-2 italic my-2;
+  @apply border-l-4 border-gray-300 pl-4 py-1 my-4 mx-2;
 }
 
 .markdown p {
-  @apply mb-2 leading-relaxed;
+  @apply mb-4 leading-relaxed;
+}
+
+.markdown ul,
+.markdown ol {
+  @apply my-4;
+  padding-left: 1.5rem;
 }
 
 .markdown ul {
-  @apply list-disc mb-2;
-  padding-left: 0.75rem;
+  @apply list-disc;
 }
 
 .markdown ol {
-  @apply list-decimal mb-2;
-  padding-left: 0.75rem;
+  @apply list-decimal;
 }
 
 .markdown li {
-  @apply mb-1;
+  @apply mb-2 leading-relaxed;
 }
 
-.markdown li:last-child {
-  @apply mb-0;
-}
-
+/* Nested lists */
 .markdown li > ul,
 .markdown li > ol {
-  @apply mt-1 mb-0;
+  @apply mt-2 mb-2;
+  padding-left: 1.5rem;
+}
+
+/* Deeper nested lists */
+.markdown li > ul > li > ul,
+.markdown li > ol > li > ol {
+  padding-left: 1.5rem;
 }
 
 .markdown table {
-  @apply min-w-full border-collapse mb-2;
+  @apply min-w-full border-collapse mb-4 mt-2;
 }
 
 .markdown th {
-  @apply bg-gray-50 border border-gray-200 px-2 py-1 text-left font-bold;
+  @apply bg-gray-50 border border-gray-200 px-4 py-2 text-left font-bold;
 }
 
 .markdown td {
-  @apply border border-gray-200 px-2 py-1;
+  @apply border border-gray-200 px-4 py-2;
 }
 
 .markdown a {
@@ -144,11 +156,11 @@ body {
 }
 
 .markdown hr {
-  @apply my-4 border-t border-gray-200;
+  @apply my-6 border-t border-gray-200;
 }
 
 .markdown img {
-  @apply max-w-full h-auto my-2 rounded-lg;
+  @apply max-w-full h-auto my-4 rounded-lg;
 }
 
 .markdown strong {
