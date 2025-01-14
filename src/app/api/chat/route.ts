@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     async start(controller) {
       let isClosed = false
       try {
-        const generator = handleLLMStream(conversation, llmWithTools, wolframAlphaTool)
+        const generator = handleLLMStream(conversation, llmWithTools as any, wolframAlphaTool)
         for await (const chunk of generator) {
           controller.enqueue(chunk)
         }
