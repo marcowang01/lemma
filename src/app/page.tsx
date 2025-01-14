@@ -87,10 +87,10 @@ export default function Chat() {
 
   return (
     <main className="container mx-auto max-w-6xl p-4">
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid gap-8 md:grid-cols-1">
         {/* Image Upload / Preview */}
         <Card className="overflow-hidden">
-          <CardContent className="relative aspect-square p-0">
+          <CardContent className="relative aspect-video p-0">
             <img
               src={imageUrl ?? "placeholder.jpg"}
               alt="Math problem"

@@ -105,18 +105,27 @@ body {
 }
 
 .markdown ul {
-  @apply list-disc list-inside mb-4 space-y-2;
+  @apply list-disc mb-4;
+  padding-left: 1.5rem;  /* Instead of list-inside */
 }
 
 .markdown ol {
-  @apply list-decimal list-inside mb-4 space-y-2;
+  @apply list-decimal mb-4;
+  padding-left: 1.5rem;  /* Instead of list-inside */
+}
+
+.markdown li {
+  @apply mb-2;  /* Instead of space-y-2 on the ul/ol */
+}
+
+.markdown li:last-child {
+  @apply mb-0;  /* Remove margin from last item */
 }
 
 .markdown li > ul,
 .markdown li > ol {
-  @apply ml-4 mt-2;
+  @apply mt-2 mb-0;  /* Adjust nested list spacing */
 }
-
 .markdown table {
   @apply min-w-full border-collapse mb-4;
 }
