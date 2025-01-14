@@ -91,7 +91,7 @@ export default function Chat() {
       <div className="grid gap-8 md:grid-cols-1">
         {/* Image Upload / Preview */}
         <Card className="overflow-hidden">
-          <CardContent className="relative w-full h-[100px] p-0">
+          <CardContent className="relative h-[100px] w-full p-0">
             <img
               src={imageUrl ?? "placeholder.jpg"}
               alt="Math problem"
