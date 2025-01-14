@@ -1,7 +1,71 @@
-import type { NextConfig } from "next";
+// next.config.ts
+import type { NextConfig } from 'next'
+import type { Configuration as WebpackConfig } from 'webpack'
+
+interface WebpackConfigContext {
+  buildId: string
+  dev: boolean
+  isServer: boolean
+  defaultLoaders: {
+    babel: any
+  }
+  webpack: any
+}
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  reactStrictMode: true,
 
-export default nextConfig;
+  webpack: (
+    config: WebpackConfig,
+    { isServer, dev }: WebpackConfigContext
+  ): WebpackConfig => {
+    // Add babel-loader for standalone
+    config.module?.rules?.push({
+      test: /\.(js|jsx|ts|tsx)$/,
+      exclude: /node_modules\/(?!@babel\/standalone)/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            ['@babel/preset-env', { targets: "defaults" }],
+            '@babel/preset-typescript',
+            ['@babel/preset-react', { runtime: 'automatic' }]
+          ],
+          plugins: [
+            '@babel/plugin-transform-runtime'
+          ],
+          cacheDirectory: true,
+        }
+      }
+    });
+
+    // Prevent multiple React instances in client
+    if (!isServer && config.resolve?.alias) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react': require.resolve('react'),
+        'react-dom': require.resolve('react-dom')
+      };
+    }
+
+    // Optimize production builds
+    if (!dev && config.optimization) {
+      config.optimization = {
+        ...config.optimization,
+        minimize: true,
+      };
+    }
+
+    return config;
+  },
+
+  // Optional: Type-safe image domain configuration
+  images: {
+    domains: [] as string[],
+  },
+  
+  // Transpile specific modules
+  transpilePackages: ['@babel/standalone'],
+}
+
+export default nextConfig
