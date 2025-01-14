@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { renderLatex } from "@/lib/latex"
 import DOMPurify from "dompurify"
-import { Edit, Upload, X } from "lucide-react"
+import { Edit, Trash2, Upload, X } from "lucide-react"
 import { marked } from "marked"
 import { useEffect, useRef, useState } from "react"
 
@@ -26,6 +26,16 @@ export default function Chat() {
     const file = e.target.files?.[0]
     if (file) {
       setImageUrl(URL.createObjectURL(file))
+    }
+  }
+
+  const handleClearImage = () => {
+    setImageUrl(null)
+    if (formRef.current) {
+      const fileInput = formRef.current.querySelector('input[type="file"]') as HTMLInputElement
+      if (fileInput) {
+        fileInput.value = ""
+      }
     }
   }
 
@@ -95,12 +105,13 @@ export default function Chat() {
                   className="hidden"
                   id="photo-upload"
                 />
+
                 <label
                   htmlFor="photo-upload"
-                  className={`pointer-events-auto absolute cursor-pointer items-center rounded-full bg-primary px-4 py-2 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90 ${
+                  className={`pointer-events-auto absolute flex cursor-pointer items-center rounded-full bg-primary px-4 py-2 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/70 ${
                     imageUrl
-                      ? "bottom-2 right-2 flex"
-                      : "inset-0 mx-auto my-auto flex h-fit w-fit items-center justify-center"
+                      ? "bottom-2 right-2"
+                      : "inset-0 mx-auto my-auto h-fit w-fit items-center justify-center"
                   }`}
                 >
                   {imageUrl ? (
@@ -110,6 +121,17 @@ export default function Chat() {
                   )}
                   <span>{imageUrl ? "Edit Image" : "Upload Image"}</span>
                 </label>
+                <div className="absolute bottom-2 right-[155px] flex gap-2">
+                  {imageUrl && (
+                    <button
+                      type="button"
+                      onClick={handleClearImage}
+                      className="pointer-events-auto flex h-[40px] items-center rounded-full bg-red-500 px-4 py-2 font-semibold text-white transition-colors duration-200 hover:bg-red-600"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
