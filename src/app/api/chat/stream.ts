@@ -3,11 +3,10 @@ import { BaseLanguageModelInput } from "@langchain/core/language_models/base"
 import { AIMessageChunk, BaseMessage, ToolMessage } from "@langchain/core/messages"
 import { Runnable } from "@langchain/core/runnables"
 import { concat } from "@langchain/core/utils/stream"
-import { ChatOpenAICallOptions } from "@langchain/openai"
 
 export async function* handleLLMStream(
   conversation: BaseMessage[],
-  llmWithTools: Runnable<BaseLanguageModelInput, AIMessageChunk, ChatOpenAICallOptions>,
+  llmWithTools: Runnable<BaseLanguageModelInput, AIMessageChunk, any>,
   wolframAlphaTool: WolframAlphaTool
 ) {
   while (true) {
@@ -17,7 +16,13 @@ export async function* handleLLMStream(
     for await (const chunk of iterator) {
       // Stream content back to the client
       if (chunk.tool_calls?.length === 0 && chunk.content && chunk.getType() === "ai") {
-        yield chunk.content
+        console.log("Chunk content:", chunk.content)
+
+        if (typeof chunk.content === "string") {
+          yield chunk.content
+        } else if (chunk.content.length > 0 && chunk.content[0].type === "text_delta") {
+          yield chunk.content[0].text
+        }
       }
       gathered = gathered !== undefined ? concat(gathered, chunk) : chunk
     }

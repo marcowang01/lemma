@@ -1,7 +1,7 @@
 import { getSystemPrompt } from "@/lib/prompts"
+import { ChatAnthropic } from "@langchain/anthropic"
 import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
 import { BaseMessage, HumanMessage, SystemMessage } from "@langchain/core/messages"
-import { ChatOpenAI } from "@langchain/openai"
 import { z } from "zod"
 import { handleLLMStream } from "./stream"
 
@@ -15,10 +15,15 @@ export async function POST(req: Request) {
     return new Response("No user prompt provided", { status: 400 })
   }
 
-  const llm = new ChatOpenAI({
-    model: "gpt-4o-mini",
+  const llm = new ChatAnthropic({
+    model: "claude-3-5-sonnet-20241022",
     temperature: 0,
   })
+
+  // const llm = new ChatOpenAI({
+  //   model: "gpt-4o-mini",
+  //   temperature: 0,
+  // })
 
   const wolframAlphaTool = new WolframAlphaTool({
     appid: process.env.WOLFRAM_ALPHA_APP_ID ?? "",
@@ -42,17 +47,28 @@ export async function POST(req: Request) {
   // Convert async generator to ReadableStream
   const stream = new ReadableStream({
     async start(controller) {
+      let isClosed = false
       try {
         const generator = handleLLMStream(conversation, llmWithTools, wolframAlphaTool)
         for await (const chunk of generator) {
           controller.enqueue(chunk)
         }
-        controller.close()
       } catch (err) {
         console.error("Stream error:", err)
-        controller.error(err)
+        if (!isClosed) {
+          controller.error(err)
+          isClosed = true
+        }
+      } finally {
+        if (!isClosed) {
+          controller.close()
+          isClosed = true
+        }
       }
     },
+    cancel() {
+      // Optional: Add cleanup logic here if needed
+    }
   })
 
   return new Response(stream, {

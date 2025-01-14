@@ -48,7 +48,8 @@ export default function Chat() {
     })
 
     // Clear user input
-    setUserInput("")
+    // TODO: uncomment for deploy
+    // setUserInput("")
 
     if (!response.ok) {
       console.error("Failed to fetch response", response)

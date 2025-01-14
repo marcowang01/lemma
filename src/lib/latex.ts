@@ -21,5 +21,25 @@ export function renderLatex(raw: string): string {
     }
   })
 
+  // Inline math: $...$
+  raw = raw.replace(/\$(.*)\$/g, (_, content) => {
+    try {
+      return katex.renderToString(content, { displayMode: false })
+    } catch (err) {
+      console.error("KaTeX inline render error:", err)
+      return `<span style="color: red;">Invalid inline math: ${content}</span>`
+    }
+  })
+
+  // Block math: $$...$$
+  raw = raw.replace(/\$\$(.*\$\$)/g, (_, content) => {
+    try {
+      return katex.renderToString(content, { displayMode: true })
+    } catch (err) {
+      console.error("KaTeX block render error:", err)
+      return `<span style="color: red;">Invalid block math: ${content}</span>`
+    }
+  })
+
   return raw
 }
