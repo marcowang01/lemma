@@ -11,7 +11,7 @@ export const maxDuration = 60
 export async function POST(req: Request) {
   const formData = await req.formData()
   const userPrompt = formData.get("userInput") as string
-  const imageInput = formData.get("imageInput") as File | null
+  const imageInput = formData.get("imageInput") as File
 
   if (!userPrompt) {
     return new Response("No user prompt provided", { status: 400 })
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     { type: "text", text: userPrompt },
   ]
 
-  if (imageInput) {
+  if (imageInput && imageInput.size > 0) {
     try {
       const base64String = await imageFileToBase64(imageInput)
       const mimeType = imageInput.type || "image/jpeg"
