@@ -27,11 +27,27 @@ function createComponent(code: string | null): React.ComponentType<any> {
   }
 }
 
-export function DynamicComponent(): React.ReactNode {
+export function DynamicComponent({ code }: { code: string }): React.ReactNode {
   const [Component, setComponent] = React.useState<React.ComponentType<any> | null>(null)
-  const [error, setError] = React.useState<string | null>(null)
+
+  useEffect(() => {
+    if (code) {
+      try {
+        const ComponentFn = createComponent(code)
+        setComponent(() => ComponentFn)
+      } catch {
+        setComponent(null)
+      }
+    }
+  }, [code])
+
+  return Component ? <Component /> : null
+}
+
+export default function DynamicPreviewPage(): React.ReactNode {
   const [code, setCode] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState<string | null>(null)
 
   useEffect(() => {
     const fetchCode = async () => {
@@ -47,6 +63,7 @@ export function DynamicComponent(): React.ReactNode {
         }
         const data = await res.json()
         setCode(data.code)
+        setError(null)
       } catch (err) {
         setError(String(err))
       } finally {
@@ -57,34 +74,17 @@ export function DynamicComponent(): React.ReactNode {
     fetchCode()
   }, [])
 
-  useEffect(() => {
-    if (code) {
-      try {
-        const ComponentFn = createComponent(code)
-        setComponent(() => ComponentFn)
-        setError(null)
-      } catch (err) {
-        setError(String(err))
-        setComponent(null)
-      }
-    }
-  }, [code])
-
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading UI...</div>
   }
 
   if (error) {
     return <div>Error: {error}</div>
   }
 
-  return Component ? <Component /> : null
-}
-
-export default function DynamicPreviewPage(): React.ReactNode {
   return (
     <div className="p-4">
-      <DynamicComponent />
+      <DynamicComponent code={code ?? ""} />
     </div>
   )
 }
