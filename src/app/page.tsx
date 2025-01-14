@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { renderLatex } from "@/lib/latex"
 import DOMPurify from "dompurify"
 import { Upload, X } from "lucide-react"
@@ -75,15 +75,18 @@ export default function Chat() {
           {/* Image Upload / Preview */}
           <Card className="overflow-hidden">
             <CardContent className="relative h-[300px] w-full p-0">
-              {imageUrl && (
-                <img
-                  src={imageUrl}
-                  alt="Math problem"
-                  className={`h-full w-auto object-contain z-30 ${!imageUrl ? "opacity-20" : "cursor-pointer"}`}
-                  onClick={() => imageUrl && setIsModalOpen(true)}
-                />
-              )}
-              <div className="absolute inset-0">
+              {/* Image container with click handler */}
+              <div
+                className="h-full w-full cursor-pointer hover:opacity-80"
+                onClick={() => imageUrl && setIsModalOpen(true)}
+              >
+                {imageUrl && (
+                  <img src={imageUrl} alt="Math problem" className="h-full w-auto object-contain" />
+                )}
+              </div>
+
+              {/* Upload button container */}
+              <div className="pointer-events-none absolute inset-0">
                 <input
                   type="file"
                   name="image"
@@ -94,7 +97,7 @@ export default function Chat() {
                 />
                 <label
                   htmlFor="photo-upload"
-                  className={`absolute cursor-pointer items-center space-x-2 rounded-full bg-primary px-4 py-2 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90 ${
+                  className={`pointer-events-auto absolute cursor-pointer items-center space-x-2 rounded-full bg-primary px-4 py-2 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90 ${
                     imageUrl
                       ? "bottom-2 right-2 flex"
                       : "inset-[40%] mx-auto my-auto flex items-center justify-center"
@@ -110,9 +113,10 @@ export default function Chat() {
           {/* Image Preview Modal */}
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogContent className="max-w-4xl">
+              <DialogTitle>Uploaded Image</DialogTitle>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+                className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
               >
                 <X className="h-4 w-4" />
                 <span className="sr-only">Close</span>
@@ -121,7 +125,7 @@ export default function Chat() {
                 <img
                   src={imageUrl ?? ""}
                   alt="Math problem enlarged"
-                  className="max-h-[80vh] w-auto object-contain"
+                  className="max-h-[80vh] w-auto rounded-md object-contain"
                 />
               </div>
             </DialogContent>
