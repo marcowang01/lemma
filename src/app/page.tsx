@@ -85,13 +85,13 @@ export default function Chat() {
         <form ref={formRef} onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
           {/* Image Upload / Preview */}
           <Card className="overflow-hidden">
-            <CardContent className="relative h-[100px] w-full p-0">
-            <img
+            <CardContent className="relative h-[300px] w-full p-0">
+              <img
                 src={imageUrl ?? "placeholder.jpg"}
-                alt="uploaded image"
+                alt="Math problem"
                 className={`h-full w-auto object-contain ${!imageUrl ? "opacity-20" : ""}`}
               />
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0">
                 <input
                   type="file"
                   name="image"
@@ -102,10 +102,12 @@ export default function Chat() {
                 />
                 <label
                   htmlFor="photo-upload"
-                  className="flex cursor-pointer items-center space-x-2 rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90"
+                  className={`absolute cursor-pointer items-center space-x-2 rounded-full bg-primary px-4 py-2 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90 ${
+                    imageUrl ? "bottom-2 right-2 flex" : "inset-0 flex items-center justify-center"
+                  }`}
                 >
-                  <Upload size={24} />
-                  <span>Change Problem</span>
+                  <Upload size={imageUrl ? 16 : 24} />
+                  <span>{imageUrl ? "Edit" : "Change Problem"}</span>
                 </label>
               </div>
             </CardContent>
