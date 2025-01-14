@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { renderLatex } from "@/lib/latex"
 import DOMPurify from "dompurify"
-import { Upload, X } from "lucide-react"
+import { Edit, Upload, X } from "lucide-react"
 import { marked } from "marked"
 import { useEffect, useRef, useState } from "react"
 
@@ -97,14 +97,18 @@ export default function Chat() {
                 />
                 <label
                   htmlFor="photo-upload"
-                  className={`pointer-events-auto absolute cursor-pointer items-center space-x-2 rounded-full bg-primary px-4 py-2 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90 ${
+                  className={`pointer-events-auto absolute cursor-pointer items-center rounded-full bg-primary px-4 py-2 text-primary-foreground transition-colors duration-200 hover:bg-primary/90 ${
                     imageUrl
                       ? "bottom-2 right-2 flex"
                       : "inset-[40%] mx-auto my-auto flex items-center justify-center"
                   }`}
                 >
-                  <Upload size={imageUrl ? 16 : 24} />
-                  <span>{imageUrl ? "Edit" : "Upload Problem"}</span>
+                  {imageUrl ? (
+                    <Edit size={16} className="mr-2" />
+                  ) : (
+                    <Upload size={24} className="shrink-0" />
+                  )}
+                  <span>{imageUrl ? "Edit Image" : "Upload Image"}</span>
                 </label>
               </div>
             </CardContent>
