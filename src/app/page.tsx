@@ -1,9 +1,10 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { renderLatex } from "@/lib/latex"
 import DOMPurify from "dompurify"
-import { Upload } from "lucide-react"
+import { Upload, X } from "lucide-react"
 import { marked } from "marked"
 import { useEffect, useRef, useState } from "react"
 
@@ -11,9 +12,9 @@ export default function Chat() {
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [userInput, setUserInput] = useState<string>("")
   const [tempText, setTempText] = useState<string>("")
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
-  // (Optional) Marked configuration. Basic usage suffices here.
   useEffect(() => {
     marked.setOptions({
       gfm: true,
@@ -21,7 +22,6 @@ export default function Chat() {
     })
   }, [])
 
-  // Handle image upload
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -29,11 +29,8 @@ export default function Chat() {
     }
   }
 
-  // Submit the user's message + image (if any) to /api/chat
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
-    // Create form data from the form element directly
     const formData = new FormData(e.currentTarget)
 
     const response = await fetch("/api/chat", {
@@ -41,7 +38,6 @@ export default function Chat() {
       body: formData,
     })
 
-    // Clear user input
     setUserInput("")
 
     if (!response.ok) {
@@ -61,16 +57,9 @@ export default function Chat() {
       }
 
       text += decoder.decode(value, { stream: true })
-
-      // 1) Render LaTeX first
       let processedText = renderLatex(text)
-
-      // 2) Pass the result through Marked to parse Markdown
       const markdownHtml = marked.parse(processedText) as string
-
-      // 3) Sanitize the final HTML for safety
       const safeHtml = DOMPurify.sanitize(markdownHtml)
-
       setTempText(safeHtml)
     }
   }
@@ -80,17 +69,20 @@ export default function Chat() {
   }
 
   return (
-    <main className="container mx-auto max-w-4xl p-4">
+    <main className="container mx-auto max-w-6xl p-4">
       <div className="grid gap-8 md:grid-cols-1">
         <form ref={formRef} onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
           {/* Image Upload / Preview */}
           <Card className="overflow-hidden">
             <CardContent className="relative h-[300px] w-full p-0">
-              <img
-                src={imageUrl ?? "placeholder.jpg"}
-                alt="Math problem"
-                className={`h-full w-auto object-contain ${!imageUrl ? "opacity-20" : ""}`}
-              />
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Math problem"
+                  className={`h-full w-auto object-contain z-30 ${!imageUrl ? "opacity-20" : "cursor-pointer"}`}
+                  onClick={() => imageUrl && setIsModalOpen(true)}
+                />
+              )}
               <div className="absolute inset-0">
                 <input
                   type="file"
@@ -103,17 +95,39 @@ export default function Chat() {
                 <label
                   htmlFor="photo-upload"
                   className={`absolute cursor-pointer items-center space-x-2 rounded-full bg-primary px-4 py-2 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90 ${
-                    imageUrl ? "bottom-2 right-2 flex" : "inset-0 flex items-center justify-center"
+                    imageUrl
+                      ? "bottom-2 right-2 flex"
+                      : "inset-[40%] mx-auto my-auto flex items-center justify-center"
                   }`}
                 >
                   <Upload size={imageUrl ? 16 : 24} />
-                  <span>{imageUrl ? "Edit" : "Change Problem"}</span>
+                  <span>{imageUrl ? "Edit" : "Upload Problem"}</span>
                 </label>
               </div>
             </CardContent>
           </Card>
 
-          {/* Render Marked + KaTeX HTML */}
+          {/* Image Preview Modal */}
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogContent className="max-w-4xl">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </button>
+              <div className="mt-2 w-full">
+                <img
+                  src={imageUrl ?? ""}
+                  alt="Math problem enlarged"
+                  className="max-h-[80vh] w-auto object-contain"
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Chat Interface */}
           <Card className="overflow-hidden">
             <CardContent className="relative flex h-full flex-col p-4">
               <div
