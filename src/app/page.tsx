@@ -89,7 +89,7 @@ export default function Chat() {
               <div className="pointer-events-none absolute inset-0">
                 <input
                   type="file"
-                  name="image"
+                  name="imageInput"
                   accept="image/*"
                   onChange={handleImageChange}
                   className="hidden"

@@ -4,12 +4,14 @@ import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
 import { BaseMessage, HumanMessage, SystemMessage } from "@langchain/core/messages"
 import { z } from "zod"
 import { handleLLMStream } from "./stream"
+import { imageFileToBase64 } from "./utils"
 
 export const maxDuration = 60
 
 export async function POST(req: Request) {
   const formData = await req.formData()
   const userPrompt = formData.get("userInput") as string
+  const imageInput = formData.get("imageInput") as File | null
 
   if (!userPrompt) {
     return new Response("No user prompt provided", { status: 400 })
@@ -39,9 +41,28 @@ export async function POST(req: Request) {
 
   const llmWithTools = llm.bindTools([wolframAlphaTool])
 
+  let messageContent: Array<{ type: string; text?: string; image_url?: { url: string } }> = [
+    { type: "text", text: userPrompt },
+  ]
+
+  if (imageInput) {
+    try {
+      const base64String = await imageFileToBase64(imageInput)
+      const mimeType = imageInput.type || "image/jpeg"
+      messageContent.push({
+        type: "image_url",
+        image_url: { url: `data:${mimeType};base64,${base64String}` },
+      })
+    } catch (error) {
+      console.error("Error processing image:", error)
+    }
+  }
+
   const conversation: BaseMessage[] = [
     new SystemMessage(getSystemPrompt()),
-    new HumanMessage(userPrompt),
+    new HumanMessage({
+      content: messageContent,
+    }),
   ]
 
   // Convert async generator to ReadableStream
@@ -68,7 +89,7 @@ export async function POST(req: Request) {
     },
     cancel() {
       // Optional: Add cleanup logic here if needed
-    }
+    },
   })
 
   return new Response(stream, {
