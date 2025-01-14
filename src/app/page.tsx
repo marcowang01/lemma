@@ -77,7 +77,7 @@ export default function Chat() {
             <CardContent className="relative h-[300px] w-full p-0">
               {/* Image container with click handler */}
               <div
-                className="h-full w-full cursor-pointer hover:opacity-80"
+                className={`h-full w-full hover:opacity-80 ${imageUrl && "cursor-pointer"}`}
                 onClick={() => imageUrl && setIsModalOpen(true)}
               >
                 {imageUrl && (
@@ -97,16 +97,16 @@ export default function Chat() {
                 />
                 <label
                   htmlFor="photo-upload"
-                  className={`pointer-events-auto absolute cursor-pointer items-center rounded-full bg-primary px-4 py-2 text-primary-foreground transition-colors duration-200 hover:bg-primary/90 ${
+                  className={`pointer-events-auto absolute cursor-pointer items-center rounded-full bg-primary px-4 py-2 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90 ${
                     imageUrl
                       ? "bottom-2 right-2 flex"
-                      : "inset-[40%] mx-auto my-auto flex items-center justify-center"
+                      : "inset-0 mx-auto my-auto flex h-fit w-fit items-center justify-center"
                   }`}
                 >
                   {imageUrl ? (
                     <Edit size={16} className="mr-2" />
                   ) : (
-                    <Upload size={24} className="shrink-0" />
+                    <Upload size={16} className="mr-2 shrink-0" />
                   )}
                   <span>{imageUrl ? "Edit Image" : "Upload Image"}</span>
                 </label>
