@@ -80,16 +80,16 @@ export default function Chat() {
   }
 
   return (
-    <main className="container mx-auto max-w-6xl p-4">
+    <main className="container mx-auto max-w-4xl p-4">
       <div className="grid gap-8 md:grid-cols-1">
         <form ref={formRef} onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
           {/* Image Upload / Preview */}
           <Card className="overflow-hidden">
             <CardContent className="relative h-[100px] w-full p-0">
-              <img
+            <img
                 src={imageUrl ?? "placeholder.jpg"}
-                alt="Math problem"
-                className={`h-full w-full object-cover ${!imageUrl ? "opacity-20" : ""}`}
+                alt="uploaded image"
+                className={`h-full w-auto object-contain ${!imageUrl ? "opacity-20" : ""}`}
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <input
