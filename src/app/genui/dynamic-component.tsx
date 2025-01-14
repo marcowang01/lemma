@@ -1,9 +1,7 @@
 "use client"
 import * as React from "react"
 import { useEffect } from "react"
-
-// Import all UI components explicitly
-import { componentList } from "./imports"
+import { componentList } from "./component-list"
 
 function createComponent(code: string | null): React.ComponentType<any> {
   if (!code) {
