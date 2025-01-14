@@ -2,7 +2,7 @@
 import * as LucideIcons from "lucide-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
-import * as Recharts from "recharts"
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts" // Import specific components instead of all Recharts
 
 // Import all UI components explicitly
 import { Badge, badgeVariants } from "@/components/ui/badge"
@@ -67,7 +67,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  Tooltip as TooltipUI,
+} from "@/components/ui/tooltip"
 
 // Create a components object with explicit typing
 const components = {
@@ -75,10 +80,14 @@ const components = {
   React,
   useState,
   useEffect,
-  // Libraries
-  ...Recharts,
   ...LucideIcons,
-  // UI Components
+  // Libraries
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
   Badge,
   badgeVariants,
   Breadcrumb,
@@ -139,7 +148,7 @@ const components = {
   TabsContent,
   TabsList,
   TabsTrigger,
-  Tooltip,
+  TooltipUI,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,

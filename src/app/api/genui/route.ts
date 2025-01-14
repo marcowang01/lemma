@@ -1,3 +1,4 @@
+// app/api/genui/route.ts
 import { transform } from "@babel/standalone"
 
 export async function POST(req: Request) {
@@ -18,11 +19,16 @@ export async function POST(req: Request) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <LineChart width={500} height={300} data={data}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Line type="monotone" dataKey="value" stroke="#8884d8" />
-            </LineChart>
+            <div style={{ width: '100%', height: 300 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data}>
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
       );
