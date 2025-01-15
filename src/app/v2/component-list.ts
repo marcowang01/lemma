@@ -2,6 +2,7 @@ import * as LucideIcons from "lucide-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts" // Import specific components instead of all Recharts
+import { motion } from "framer-motion"
 
 // Import all UI components explicitly
 import { Badge, badgeVariants } from "@/components/ui/badge"
@@ -79,6 +80,7 @@ export const componentList = {
   useState,
   useEffect,
   ...LucideIcons,
+  motion,
   LineChart,
   Line,
   XAxis,

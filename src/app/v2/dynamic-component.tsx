@@ -13,7 +13,7 @@ function createComponent(code: string | null): React.ComponentType<any> {
     const wrappedCode = `
       const {${Object.keys(componentList).join(",")}} = dependencies;
       ${code}
-      return DynamicChart;
+      return SolutionComponent;
     `
 
     // Create and execute the function with dependencies

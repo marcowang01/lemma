@@ -1,42 +1,37 @@
-// app/api/genui/route.ts
+import { getGenUISystemPrompt } from "@/lib/prompts"
 import { transform } from "@babel/standalone"
+import { ChatAnthropic } from "@langchain/anthropic"
+import { BaseMessage, HumanMessage, SystemMessage } from "@langchain/core/messages"
+import { getFirstFromTag } from "./utils"
 
 export async function POST(req: Request) {
-  const componentCode = `
-    const DynamicChart = () => {
-      const data = [
-        { name: 'Jan', value: 400 },
-        { name: 'Feb', value: 300 },
-        { name: 'Mar', value: 600 }
-      ];
+  const llm = new ChatAnthropic({
+    model: "claude-3-5-sonnet-20241022",
+    temperature: 0,
+  })
 
-      return (
-        <Card className="w-full max-w-xl">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="w-6 h-6 text-blue-500" />
-              Chart Example
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div style={{ width: '100%', height: 300 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data}>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      );
-    };
-  `
+  const conversation: BaseMessage[] = [
+    new SystemMessage(getGenUISystemPrompt()),
+    new HumanMessage({
+      content: "give me the solution to the problem (3x^3+2x-5)(4x-3) simplify and expand",
+    }),
+  ]
 
-  const code = createComponent(componentCode)
+  const response = await llm.invoke(conversation)
 
+  console.log(`genui llm response: ${JSON.stringify(response, null, 2)}`)
+
+  const content = response.content as string
+  // const content = smartDummyCode
+  let llmCode = getFirstFromTag(content, "code")
+
+  if (!llmCode) {
+    return Response.json({ error: "UI failed to generate" }, { status: 500 })
+  }
+
+  // llmCode = dummyCode
+
+  const code = createComponent(llmCode ?? "")
   return Response.json({ code: code })
 }
 
