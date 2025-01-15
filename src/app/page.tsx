@@ -8,7 +8,7 @@ import { marked } from "marked"
 import { useEffect, useState } from "react"
 
 export default function Chat() {
-  const [tempText, setTempText] = useState<string>("")
+  const [solutionText, setSolutionText] = useState<string>("")
 
   useEffect(() => {
     marked.setOptions({
@@ -28,7 +28,7 @@ export default function Chat() {
 
     if (!response.ok) {
       console.error("Failed to fetch response", response)
-      setTempText("Failed to fetch response")
+      setSolutionText("Failed to fetch response")
       return
     }
 
@@ -46,22 +46,24 @@ export default function Chat() {
       let processedText = renderLatex(text)
       const markdownHtml = marked.parse(processedText) as string
       const safeHtml = DOMPurify.sanitize(markdownHtml)
-      setTempText(safeHtml)
+      setSolutionText(safeHtml)
     }
   }
 
   return (
-    <main className="container mx-auto max-w-6xl p-4">
+    <main className="container mx-auto max-w-4xl p-4">
       <div className="grid gap-8 md:grid-cols-1">
         <InputForm onSubmit={handleSubmit} />
-        <Card className="overflow-hidden">
-          <CardContent className="relative flex h-full flex-col p-4">
-            <div
-              className="markdown mb-auto h-full w-full"
-              dangerouslySetInnerHTML={{ __html: tempText }}
-            />
-          </CardContent>
-        </Card>
+        {solutionText && (
+          <Card className="overflow-hidden">
+            <CardContent className="relative flex h-full flex-col p-4">
+              <div
+                className="markdown mb-auto h-full w-full"
+                dangerouslySetInnerHTML={{ __html: solutionText }}
+              />
+            </CardContent>
+          </Card>
+        )}
       </div>
     </main>
   )

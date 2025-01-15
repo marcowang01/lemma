@@ -17,12 +17,14 @@ export function ImageUpload({
 }: ImageUploadProps) {
   return (
     <>
-      <div
-        className={`h-full w-full hover:opacity-80 ${imageUrl && "cursor-pointer"}`}
-        onClick={() => imageUrl && onImageClick()}
-      >
+      <div className={`h-full w-full p-2`}>
         {imageUrl && (
-          <img src={imageUrl} alt="Math problem" className="h-full w-auto object-contain" />
+          <img
+            src={imageUrl}
+            alt="Math problem"
+            className="h-full w-auto cursor-pointer rounded-lg object-contain transition-opacity duration-200 hover:opacity-80"
+            onClick={() => imageUrl && onImageClick()}
+          />
         )}
       </div>
 

@@ -41,7 +41,7 @@ export function InputForm({
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
       <Card className="overflow-hidden">
-        <CardContent className="relative h-[300px] w-full p-0">
+        <CardContent className="relative h-[200px] w-full p-0">
           <ImageUpload
             imageUrl={imageUrl}
             onImageChange={handleImageChange}
@@ -51,26 +51,27 @@ export function InputForm({
         </CardContent>
       </Card>
       <Card className="overflow-hidden">
-        <CardContent className="relative h-fit w-full p-2">
+        <CardContent className="relative h-fit w-full p-0">
           <div className="m-2 flex w-[calc(100%-1rem)] gap-2">
             <input
-              className="flex-1 rounded border border-gray-300 p-2"
+              className="flex-1 rounded p-2 ring-offset-background focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
               name="userInput"
               value={userInput}
-              placeholder="Say something..."
+              placeholder="Type or upload your math problem..."
               onChange={(e) => setUserInput(e.target.value)}
             />
             <button
               type="submit"
-              className="rounded bg-primary px-4 py-2 text-white hover:bg-primary/90"
+              className="rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!userInput && !imageUrl}
             >
-              Send
+              Submit
             </button>
           </div>
         </CardContent>
       </Card>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="w-fit max-w-6xl">
           <DialogTitle>Uploaded Image</DialogTitle>
           <button
             onClick={() => setIsModalOpen(false)}
