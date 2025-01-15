@@ -31,175 +31,90 @@ const DynamicChart = () => {
 };
 `
 
-export const smartDummyCode = `I'll create an interactive UI that explains FOIL multiplication for polynomials with a step-by-step solution.
+export const smartDummyCode = `I'll help create an interactive and visually appealing solution for expanding this polynomial using the FOIL method, but extended for a trinomial times binomial.
 
 <scratchpad>
 Let's break this down into clear visual steps:
-1. First, we need to show the distribution of each term
-2. Create an animated connection between terms being multiplied
-3. Show the collection of like terms
-4. Present the final simplified expression
+1. First, we'll show the original expression
+2. Then show how each term in the first bracket multiplies with each term in the second
+3. Use color coding and connecting lines to show multiplication pairs
+4. Group like terms
+5. Show final simplified expression
 
-We'll use:
-- SVG lines for FOIL connections
-- Animated transitions for each step
-- Color coding for like terms
-- Cards for each step
-- Interactive hover effects
+We'll use animations and visual aids to make the distribution process clear.
 </scratchpad>
 
 <imports>
-import { Card } from "@/components/ui/card"
 import { motion } from "framer-motion"
+import { Card } from "@/components/ui/card"
+import { ChevronRight } from "lucide-react"
 import { useState } from "react"
-import { ChevronRight, Plus, Minus } from "lucide-react"
 </imports>
 
 <code>
 const SolutionComponent = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [step, setStep] = useState(1);
   
-  const steps = [
-    {
-      id: 1,
-      title: "Identify Terms",
-      content: "We have (3x³ + 2x - 5)(4x - 3)"
-    },
-    {
-      id: 2,
-      title: "Distribute First Term",
-      content: "3x³(4x) + 3x³(-3)"
-    },
-    {
-      id: 3,
-      title: "Distribute Second Term",
-      content: "2x(4x) + 2x(-3)"
-    },
-    {
-      id: 4,
-      title: "Distribute Third Term",
-      content: "-5(4x) + (-5)(-3)"
-    },
-    {
-      id: 5,
-      title: "Simplify Each Term",
-      content: "12x⁴ - 9x³ + 8x² - 6x - 20x + 15"
-    },
-    {
-      id: 6,
-      title: "Combine Like Terms",
-      content: "12x⁴ - 9x³ + 8x² - 26x + 15"
-    }
-  ];
+  const fadeIn = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.5 }
+  };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        Polynomial Multiplication Solution
+    <div className="p-6 max-w-4xl mx-auto space-y-6">
+      <h1 className="text-2xl font-bold text-center mb-8">
+        Expanding $(3x^3+2x-5)(4x-3)$
       </h1>
 
-      {/* FOIL Diagram */}
-      <Card className="p-6 relative">
-        <div className="flex justify-center items-center space-x-8">
-          <div className="flex flex-col items-center space-y-4">
-            <motion.div 
-              className="text-2xl font-semibold"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              (3x³ + 2x - 5)
-            </motion.div>
-            <motion.div 
-              className="text-2xl font-semibold"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              (4x - 3)
-            </motion.div>
-          </div>
-
-          <svg className="w-64 h-32">
-            {currentStep >= 2 && (
-              <motion.path
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1 }}
-                d="M 10,10 L 150,10"
-                stroke="blue"
-                strokeWidth="2"
-                fill="none"
-              />
-            )}
-            {/* Add more animated paths for other connections */}
-          </svg>
-        </div>
-      </Card>
-
-      {/* Step by Step Solution */}
-      <div className="space-y-4">
-        {steps.map((step) => (
-          <motion.div
-            key={step.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ 
-              opacity: currentStep >= step.id ? 1 : 0.5,
-              y: 0 
-            }}
-            className="relative"
-          >
-            <Card 
-              className={\`p-4 \${currentStep === step.id ? 'border-blue-500 border-2' : ''}\`}
-              onClick={() => setCurrentStep(step.id)}
-            >
-              <div className="flex items-center space-x-4">
-                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
-                  {step.id}
-                </div>
-                <div>
-                  <h3 className="font-semibold">{step.title}</h3>
-                  <p className="text-lg mt-2">{step.content}</p>
-                </div>
+      <div className="space-y-8">
+        {/* Step 1: Distribution Visualization */}
+        <motion.div {...fadeIn} className="relative">
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold mb-4">Step 1: Distribution</h2>
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex items-center gap-4 text-lg">
+                <div className="text-blue-500">$(3x^3+2x-5)$</div>
+                <div className="text-green-500">$(4x-3)$</div>
               </div>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Navigation Controls */}
-      <div className="flex justify-center space-x-4">
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50"
-          onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
-          disabled={currentStep === 1}
-        >
-          Previous
-        </button>
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50"
-          onClick={() => setCurrentStep(Math.min(steps.length, currentStep + 1))}
-          disabled={currentStep === steps.length}
-        >
-          Next
-        </button>
-      </div>
-
-      {/* Final Answer Box */}
-      {currentStep === steps.length && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="mt-8"
-        >
-          <Card className="p-6 bg-green-50">
-            <h3 className="text-xl font-bold text-center text-green-700">
-              Final Answer
-            </h3>
-            <p className="text-2xl text-center mt-4">
-              12x⁴ - 9x³ + 8x² - 26x + 15
-            </p>
+              <div className="border-l-2 border-dashed h-8"></div>
+              <div className="grid grid-cols-1 gap-2">
+                <div className="text-blue-500">$3x^3 \cdot 4x = 12x^4$</div>
+                <div className="text-blue-500">$3x^3 \cdot (-3) = -9x^3$</div>
+                <div className="text-purple-500">$2x \cdot 4x = 8x^2$</div>
+                <div className="text-purple-500">$2x \cdot (-3) = -6x$</div>
+                <div className="text-red-500">$-5 \cdot 4x = -20x$</div>
+                <div className="text-red-500">$-5 \cdot (-3) = 15$</div>
+              </div>
+            </div>
           </Card>
         </motion.div>
-      )}
+
+        {/* Step 2: Grouping Like Terms */}
+        <motion.div {...fadeIn} className="relative">
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold mb-4">Step 2: Grouping Like Terms</h2>
+            <div className="space-y-4">
+              <div className="text-lg">
+                $12x^4 - 9x^3 + 8x^2 - 6x - 20x + 15$
+              </div>
+              <div className="text-lg text-purple-500">
+                Combining like terms: $-6x - 20x = -26x$
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Step 3: Final Answer */}
+        <motion.div {...fadeIn} className="relative">
+          <Card className="p-6 bg-green-50">
+            <h2 className="text-lg font-semibold mb-4">Final Answer:</h2>
+            <div className="text-xl text-center text-green-700">
+              $12x^4 - 9x^3 + 8x^2 - 26x + 15$
+            </div>
+          </Card>
+        </motion.div>
+      </div>
     </div>
   );
 };
@@ -209,22 +124,13 @@ const SolutionComponent = () => {
 export default SolutionComponent;
 </exports>
 
-This solution creates an interactive UI that:
-1. Shows the polynomial multiplication step by step
-2. Uses animations to demonstrate the FOIL method
-3. Highlights current steps
-4. Allows users to navigate through steps
-5. Shows a clear final answer
-6. Uses color coding and visual hierarchy to make the solution clear
-7. Implements interactive elements to engage students
+This solution includes:
+1. A clear step-by-step breakdown
+2. Color coding to help track terms
+3. Visual separation of steps
+4. Animations using framer-motion
+5. Clean UI using shadcn/ui cards
+6. Clear typography and spacing
+7. Proper LaTeX formatting for mathematical expressions
 
-The component uses:
-- Framer Motion for smooth animations
-- Cards for organizing content
-- SVG paths for FOIL connections
-- Step-by-step navigation
-- Responsive design
-- Clear typography hierarchy
-
-Students can click through each step to understand the process, with visual aids helping to reinforce the concepts.
-`
+The solution shows how each term in the first expression multiplies with each term in the second expression, then groups like terms, and finally shows the simplified result. The color coding helps students track where each term comes from in the original expression.`
