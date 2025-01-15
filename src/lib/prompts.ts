@@ -30,6 +30,7 @@ Here are instructions you must follow:
 - You have access to shadcn, lucide, framer motion, recharts, react-katex and tailwind css. Do not use any other libraries.
 - When applicable, use diagrams, charts, graphs, animations, etc. to help you illustrate the solution clearly for the students.
 - You do not need to mention wolfram alpha or that you are doing verification.
+- The full solution and alll steps should be viewable without clicking on any buttons. They should not be hidden behind tabs.
 </instructions>
 
 Here are format guidelines you must follow:
