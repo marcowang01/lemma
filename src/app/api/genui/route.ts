@@ -12,6 +12,9 @@ export async function POST(req: Request) {
   const userInput = formData.get("userInput") as string
   const imageInput = formData.get("imageInput") as File
 
+  console.log(`userInput: ${userInput}`)
+  console.log(`imageInput: ${JSON.stringify(imageInput, null, 2)}`)
+
   const llm = new ChatAnthropic({
     model: "claude-3-5-sonnet-20241022",
     temperature: 0,
