@@ -23,6 +23,7 @@
 - make sure error handling is reasonable
 - add routing between pages
 - hook up images on v2
+- template approach for gen ui include imports and exports and componnet defninition
 
 - refactor code into components
 - add a nicer error and loading UI
