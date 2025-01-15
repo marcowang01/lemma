@@ -96,14 +96,11 @@ export async function POST(req: Request) {
   }
 
   const content = textContent
-  // const content = smartDummyCode
   let llmCode = getFirstFromTag(content, "code")
 
   if (!llmCode) {
     return Response.json({ error: "UI failed to generate code" }, { status: 500 })
   }
-
-  // llmCode = dummyCode
 
   let code = createComponent(llmCode ?? "")
 
