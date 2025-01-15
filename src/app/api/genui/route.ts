@@ -4,9 +4,14 @@ import { ChatAnthropic } from "@langchain/anthropic"
 import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
 import { BaseMessage, HumanMessage, SystemMessage, ToolMessage } from "@langchain/core/messages"
 import { z } from "zod"
+import { imageFileToBase64 } from "../chat/utils"
 import { getFirstFromTag } from "./utils"
 
 export async function POST(req: Request) {
+  const formData = await req.formData()
+  const userInput = formData.get("userInput") as string
+  const imageInput = formData.get("imageInput") as File
+
   const llm = new ChatAnthropic({
     model: "claude-3-5-sonnet-20241022",
     temperature: 0,
@@ -26,10 +31,27 @@ export async function POST(req: Request) {
 
   const llmWithTools = llm.bindTools([wolframAlphaTool])
 
+  let messageContent: Array<{ type: string; text?: string; image_url?: { url: string } }> = [
+    { type: "text", text: userInput },
+  ]
+
+  if (imageInput && imageInput.size > 0) {
+    try {
+      const base64String = await imageFileToBase64(imageInput)
+      const mimeType = imageInput.type || "image/jpeg"
+      messageContent.push({
+        type: "image_url",
+        image_url: { url: `data:${mimeType};base64,${base64String}` },
+      })
+    } catch (error) {
+      console.error("Error processing image:", error)
+    }
+  }
+
   const conversation: BaseMessage[] = [
     new SystemMessage(getGenUISystemPrompt()),
     new HumanMessage({
-      content: "Solve the quadratic equation: x² + 5x + 6 = 0",
+      content: userInput,
     }),
   ]
 
@@ -51,7 +73,7 @@ export async function POST(req: Request) {
 
     if (response.tool_calls?.length && response.tool_calls?.length > 0) {
       for (const toolCall of response.tool_calls) {
-      if (toolCall.name === "wolfram-alpha") {
+        if (toolCall.name === "wolfram-alpha") {
           try {
             const toolMessage = (await wolframAlphaTool.invoke(toolCall)) as ToolMessage
 
