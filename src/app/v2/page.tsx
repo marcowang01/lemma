@@ -1,46 +1,17 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
-import { Edit, Trash2, Upload, X } from "lucide-react"
-import { useRef, useState } from "react"
+import { InputForm } from "@/components/core/input-form"
+import { useState } from "react"
 import { DynamicComponent } from "./dynamic-component"
 
 export default function Page() {
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
-  const [userInput, setUserInput] = useState<string>("")
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const formRef = useRef<HTMLFormElement>(null)
-
   const [code, setCode] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setImageUrl(URL.createObjectURL(file))
-    }
-  }
-
-  const handleClearImage = () => {
-    setImageUrl(null)
-    if (formRef.current) {
-      const fileInput = formRef.current.querySelector('input[type="file"]') as HTMLInputElement
-      if (fileInput) {
-        fileInput.value = ""
-      }
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-
-    if (!userInput) {
-      setError("Please enter a message")
-      return
-    }
 
     try {
       setLoading(true)
@@ -61,114 +32,14 @@ export default function Page() {
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserInput(e.target.value)
-  }
-
   return (
-    <main className="container mx-auto max-w-6xl p-4">
+    <main className="container mx-auto max-w-4xl p-4">
       <div className="grid gap-8 md:grid-cols-1">
-        <form ref={formRef} onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
-          {/* Image Upload / Preview */}
-          <Card className="overflow-hidden">
-            <CardContent className="relative h-[300px] w-full p-0">
-              {/* Image container with click handler */}
-              <div
-                className={`h-full w-full hover:opacity-80 ${imageUrl && "cursor-pointer"}`}
-                onClick={() => imageUrl && setIsModalOpen(true)}
-              >
-                {imageUrl && (
-                  <img src={imageUrl} alt="Math problem" className="h-full w-auto object-contain" />
-                )}
-              </div>
-
-              {/* Upload button container */}
-              <div className="pointer-events-none absolute inset-0">
-                <input
-                  type="file"
-                  name="imageInput"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  id="photo-upload"
-                />
-
-                <label
-                  htmlFor="photo-upload"
-                  className={`pointer-events-auto absolute flex cursor-pointer items-center rounded-full bg-primary px-4 py-2 font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/70 ${
-                    imageUrl
-                      ? "bottom-2 right-2"
-                      : "inset-0 mx-auto my-auto h-fit w-fit items-center justify-center"
-                  }`}
-                >
-                  {imageUrl ? (
-                    <Edit size={16} className="mr-2" />
-                  ) : (
-                    <Upload size={16} className="mr-2 shrink-0" />
-                  )}
-                  <span>{imageUrl ? "Edit Image" : "Upload Image"}</span>
-                </label>
-                <div className="absolute bottom-2 right-[155px] flex gap-2">
-                  {imageUrl && (
-                    <button
-                      type="button"
-                      onClick={handleClearImage}
-                      className="pointer-events-auto flex h-[40px] items-center rounded-full bg-red-500 px-4 py-2 font-semibold text-white transition-colors duration-200 hover:bg-red-600"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Image Preview Modal */}
-          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogContent className="max-w-4xl">
-              <DialogTitle>Uploaded Image</DialogTitle>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-              </button>
-              <div className="mt-2 w-full">
-                <img
-                  src={imageUrl ?? ""}
-                  alt="Math problem enlarged"
-                  className="max-h-[80vh] w-auto rounded-md object-contain"
-                />
-              </div>
-            </DialogContent>
-          </Dialog>
-
-          {/* Chat Interface */}
-          <Card className="overflow-hidden">
-            <CardContent className="relative flex h-full flex-col p-4">
-              <div className="flex w-full gap-2">
-                <input
-                  className="flex-1 rounded border border-gray-300 p-2"
-                  name="userInput"
-                  value={userInput}
-                  placeholder="Say something..."
-                  onChange={handleInputChange}
-                />
-                <button
-                  type="submit"
-                  className="rounded bg-primary px-4 py-2 text-white hover:bg-primary/90"
-                >
-                  Send
-                </button>
-              </div>
-            </CardContent>
-          </Card>
-        </form>
+        <InputForm onSubmit={handleSubmit} />
+        {loading && <div>Loading UI...</div>}
+        {error && <div>Error: {error}</div>}
+        <DynamicComponent code={code ?? ""} />
       </div>
-      {loading && <div>Loading UI...</div>}
-      {error && <div>Error: {error}</div>}
-      <DynamicComponent code={code ?? ""} />
     </main>
   )
 }

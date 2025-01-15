@@ -28,7 +28,7 @@
 - add a nicer error and loading UI
 - Make the input and image all at the top
 - add down things I would do with more time and list of features
-
+- make v1/v2 not two pages but just the submit is different
 
 - text area input
 - file input, multiple images

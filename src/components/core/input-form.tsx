@@ -35,6 +35,11 @@ export function InputForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (!userInput && !imageUrl) {
+      return
+    }
+
     await onSubmit(e)
   }
 
