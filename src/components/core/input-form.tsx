@@ -62,7 +62,7 @@ export function InputForm({
               className="flex-1 rounded p-2 ring-offset-background focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
               name="userInput"
               value={userInput}
-              placeholder="Type or upload your math problem..."
+              placeholder="Type and/or upload your math problem..."
               onChange={(e) => setUserInput(e.target.value)}
             />
             <button

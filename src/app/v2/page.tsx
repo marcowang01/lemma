@@ -36,7 +36,7 @@ export default function Page() {
     <main className="container mx-auto max-w-4xl p-4">
       <div className="grid gap-8 md:grid-cols-1">
         <InputForm onSubmit={handleSubmit} />
-        {loading && <div>Loading UI...</div>}
+        {loading && <div>Generating your solution...</div>}
         {error && <div>Error: {error}</div>}
         <DynamicComponent code={code ?? ""} />
       </div>
