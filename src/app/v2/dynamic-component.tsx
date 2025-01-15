@@ -1,4 +1,5 @@
 "use client"
+import { COMPONENT_NAME } from "@/lib/prompts"
 import * as React from "react"
 import { useEffect } from "react"
 import { componentList } from "./component-list"
@@ -13,7 +14,7 @@ function createComponent(code: string | null): React.ComponentType<any> {
     const wrappedCode = `
       const {${Object.keys(componentList).join(",")}} = dependencies;
       ${code}
-      return SolutionComponent;
+      return ${COMPONENT_NAME};
     `
 
     // Create and execute the function with dependencies
@@ -40,49 +41,4 @@ export function DynamicComponent({ code }: { code: string }): React.ReactNode {
   }, [code])
 
   return Component ? <Component /> : null
-}
-
-export default function DynamicPreviewPage(): React.ReactNode {
-  const [code, setCode] = React.useState<string | null>(null)
-  const [loading, setLoading] = React.useState(true)
-  const [error, setError] = React.useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchCode = async () => {
-      try {
-        const res = await fetch("/api/genui", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        if (!res.ok) {
-          throw new Error("Failed to fetch code")
-        }
-        const data = await res.json()
-        setCode(data.code)
-        setError(null)
-      } catch (err) {
-        setError(String(err))
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchCode()
-  }, [])
-
-  if (loading) {
-    return <div>Loading UI...</div>
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>
-  }
-
-  return (
-    <div className="p-4">
-      <DynamicComponent code={code ?? ""} />
-    </div>
-  )
 }

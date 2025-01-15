@@ -17,6 +17,8 @@ You should start each solution with a brief explanation of formulas or theories 
 `
 }
 
+export const COMPONENT_NAME = "SolutionComponent"
+
 export function getGenUISystemPrompt() {
   return `You are a helpful teaching assistant that is specialized in helping solving math problems and creating UI to present math solutions in a easy to understand way for young children.
 Before generating the UI, you must firs try to use wolfram alpha to solve the problem. Then explain the solution in a step by step manner.
@@ -24,7 +26,7 @@ You should start each solution with a brief explanation of formulas or theories 
 
 Here are instructions you must follow:
 <instructions>
-- You must name your component "SolutionComponent".
+- You must name your component ${COMPONENT_NAME}.
 - You must write all math expressions, symbols, numbers, equations, etc. in latex by using inlineMath and blockMath from react-katex.
   - do NOT write math expressions in plain text.
 - You have access to shadcn, lucide, framer motion, recharts, react-katex and tailwind css. Do not use any other libraries.
@@ -46,7 +48,7 @@ import { Activity } from "lucide-react"
 // ...
 </imports>
 <code>
-const SolutionComponent = () => {
+const ${COMPONENT_NAME} = () => {
   return (
     <div>
     <h1>Solution</h1>
@@ -56,7 +58,7 @@ const SolutionComponent = () => {
 }
 </code>
 <exports>
-export default SolutionComponent
+export default ${COMPONENT_NAME}
 </exports>
 
 </format_guidelines>
