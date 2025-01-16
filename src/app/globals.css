@@ -77,31 +77,31 @@ body {
 }
 
 .markdown h1 {
-  @apply text-2xl font-bold mb-4 mt-6;
+  @apply mb-4 mt-6 text-2xl font-bold;
 }
 
 .markdown h2 {
-  @apply text-xl font-bold mb-3 mt-5;
+  @apply mb-3 mt-5 text-xl font-bold;
 }
 
 .markdown h3 {
-  @apply text-lg font-bold mb-2 mt-4;
+  @apply mb-2 mt-4 text-lg font-bold;
 }
 
 .markdown h4 {
-  @apply text-base font-bold mb-2 mt-3;
+  @apply mb-2 mt-3 text-base font-bold;
 }
 
 .markdown code {
-  @apply bg-gray-100 rounded-md px-1.5 py-0.5 text-sm font-mono;
+  @apply rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-sm;
 }
 
 .markdown pre {
-  @apply bg-gray-100 rounded-lg p-4 my-4 overflow-x-auto;
+  @apply my-4 overflow-x-auto rounded-lg bg-gray-100 p-4;
 }
 
 .markdown blockquote {
-  @apply border-l-4 border-gray-300 pl-4 py-1 my-4 mx-2;
+  @apply mx-2 my-4 border-l-4 border-gray-300 py-1 pl-4;
 }
 
 .markdown p {
@@ -129,7 +129,7 @@ body {
 /* Nested lists */
 .markdown li > ul,
 .markdown li > ol {
-  @apply mt-2 mb-2;
+  @apply mb-2 mt-2;
   padding-left: 1.5rem;
 }
 
@@ -140,11 +140,11 @@ body {
 }
 
 .markdown table {
-  @apply min-w-full border-collapse mb-4 mt-2;
+  @apply mb-4 mt-2 min-w-full border-collapse;
 }
 
 .markdown th {
-  @apply bg-gray-50 border border-gray-200 px-4 py-2 text-left font-bold;
+  @apply border border-gray-200 bg-gray-50 px-4 py-2 text-left font-bold;
 }
 
 .markdown td {
@@ -152,7 +152,7 @@ body {
 }
 
 .markdown a {
-  @apply text-blue-600 hover:text-blue-800 underline;
+  @apply text-blue-600 underline hover:text-blue-800;
 }
 
 .markdown hr {
@@ -160,7 +160,7 @@ body {
 }
 
 .markdown img {
-  @apply max-w-full h-auto my-4 rounded-lg;
+  @apply my-4 h-auto max-w-full rounded-lg;
 }
 
 .markdown strong {

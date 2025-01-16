@@ -1,4 +1,5 @@
 # Todo
+
 - simple chat interface: type math question, get answer
 - add support for wolfram alpha to ensure accuracy
 - refine prompt + UI to showcase steps and reasoning
@@ -7,6 +8,7 @@
 - latex rendering
 
 ## Stretch
+
 - ask follow up questions
   - add suggestions for follow up questions (pplx style)
 - chat bot on the side with a history of conversations
@@ -15,8 +17,6 @@
 - support uploading pdf
 - multistep conversation (allow user to add more images and progress)
 - auto suggest prompts for user to click and choose from
-
-
 
 - polish UI and UX
 - add some readme and deploy
@@ -36,4 +36,4 @@
 - converse and ask follow up questions
 - multi step reasoning for more complex problems
 - observability tools and way to inspect LLM logs
-- 
+-

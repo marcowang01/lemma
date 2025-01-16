@@ -30,8 +30,12 @@ export async function POST(req: Request) {
       let isClosed = false
       try {
         const generator = handleLLMStream(
-          conversation, 
-          llmWithTools as Runnable<BaseLanguageModelInput, AIMessageChunk, ChatAnthropicCallOptions>, 
+          conversation,
+          llmWithTools as Runnable<
+            BaseLanguageModelInput,
+            AIMessageChunk,
+            ChatAnthropicCallOptions
+          >,
           wolframAlphaTool
         )
         for await (const chunk of generator) {

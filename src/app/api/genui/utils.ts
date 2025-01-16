@@ -8,29 +8,26 @@ export function extractFromTags(text: string, tagName: string): string[] {
   // Create opening and closing tag patterns
   const openTag = `<${tagName}>`
   const closeTag = `</${tagName}>`
-  
+
   const results: string[] = []
   let currentIndex = 0
-  
+
   while (true) {
     // Find the next opening tag
     const startIndex = text.indexOf(openTag, currentIndex)
     if (startIndex === -1) break
-    
+
     // Find the matching closing tag
     const endIndex = text.indexOf(closeTag, startIndex)
     if (endIndex === -1) break
-    
+
     // Extract the content between tags
-    const content = text.slice(
-      startIndex + openTag.length,
-      endIndex
-    ).trim()
-    
+    const content = text.slice(startIndex + openTag.length, endIndex).trim()
+
     results.push(content)
     currentIndex = endIndex + closeTag.length
   }
-  
+
   return results
 }
 
