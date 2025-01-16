@@ -13,6 +13,8 @@ export default function Page() {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
+    console.log(`formData: ${JSON.stringify(formData, null, 2)}`)
+
     try {
       setLoading(true)
       const res = await fetch("/api/genui", {

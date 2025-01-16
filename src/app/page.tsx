@@ -21,6 +21,8 @@ export default function Chat() {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
+    console.log(`formData: ${JSON.stringify(formData, null, 2)}`)
+
     const response = await fetch("/api/chat", {
       method: "POST",
       body: formData,

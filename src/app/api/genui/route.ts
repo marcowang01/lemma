@@ -1,62 +1,20 @@
+import { getLlmClient, getMessages, getWolframAlphaTool } from "@/lib/llm"
 import { getGenUISystemPrompt } from "@/lib/prompts"
 import { transform } from "@babel/standalone"
-import { ChatAnthropic } from "@langchain/anthropic"
-import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
-import { BaseMessage, HumanMessage, SystemMessage, ToolMessage } from "@langchain/core/messages"
-import { z } from "zod"
-import { imageFileToBase64 } from "../chat/utils"
+import { ToolMessage } from "@langchain/core/messages"
 import { getFirstFromTag } from "./utils"
 
 export async function POST(req: Request) {
   const formData = await req.formData()
-  const userInput = formData.get("userInput") as string
+  const userPrompt = formData.get("userInput") as string
   const imageInput = formData.get("imageInput") as File
 
-  console.log(`userInput: ${userInput}`)
-  console.log(`imageInput: ${JSON.stringify(imageInput, null, 2)}`)
+  console.log(`userPrompt: ${userPrompt}`)
+  console.log(`imageInput:`, imageInput)
 
-  const llm = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
-    temperature: 0,
-  })
-
-  const wolframAlphaTool = new WolframAlphaTool({
-    appid: process.env.WOLFRAM_ALPHA_APP_ID ?? "",
-  })
-  wolframAlphaTool.name = "wolfram-alpha"
-  wolframAlphaTool.description =
-    "Use this tool to answer questions about math, science, and other topics. you must provide an input to the tool which represents the query you want to use the tool to evaluate."
-  wolframAlphaTool.schema = z
-    .object({
-      input: z.string().optional().describe("The input to the tool"),
-    })
-    .transform((data) => data.input)
-
-  const llmWithTools = llm.bindTools([wolframAlphaTool])
-
-  let messageContent: Array<{ type: string; text?: string; image_url?: { url: string } }> = [
-    { type: "text", text: userInput },
-  ]
-
-  if (imageInput && imageInput.size > 0) {
-    try {
-      const base64String = await imageFileToBase64(imageInput)
-      const mimeType = imageInput.type || "image/jpeg"
-      messageContent.push({
-        type: "image_url",
-        image_url: { url: `data:${mimeType};base64,${base64String}` },
-      })
-    } catch (error) {
-      console.error("Error processing image:", error)
-    }
-  }
-
-  const conversation: BaseMessage[] = [
-    new SystemMessage(getGenUISystemPrompt()),
-    new HumanMessage({
-      content: userInput,
-    }),
-  ]
+  const conversation = await getMessages(getGenUISystemPrompt(), userPrompt, imageInput)
+  const wolframAlphaTool = getWolframAlphaTool()
+  const llmWithTools = getLlmClient().bindTools([wolframAlphaTool])
 
   let textContent = ""
   while (true) {
