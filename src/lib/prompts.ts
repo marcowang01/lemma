@@ -58,6 +58,7 @@ Here are instructions you must follow:
 Here are guidelines for generating UI:
 <ui_guidelines>
 - remember to escape special characters when writing latex. For example, use gt for >, lt for <, etc.
+  - you must use a space between a number and a variable. For example, use 2 x instead of 2x.
 - If possible, you must use graphs and diagrams to help illustrate the solution.
 - BONUS POINTS: generate interactive UI elements such as buttons, sliders, interactive graphs, animations, etc.
 </ui_guidelines>
