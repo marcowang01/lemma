@@ -2,7 +2,7 @@
 
 A web application that provides step-by-step solutions to mathematical problems through text or image input.
 
-![Math Helper Interface](/api/placeholder/800/400)
+![Math Helper Interface](/assets/screenshot.png)
 
 ## Quick Start
 
@@ -60,6 +60,7 @@ Future development plans include:
 - Enhanced observability and monitoring
 - Multi-step reasoning for UI generation
 - Templates and additional constraints for UI generation
+- Add authentication, sessions, and persist solutions
 
 ## Requirements
 - Node.js (version 16 or higher)
