@@ -62,6 +62,7 @@ Future development plans include:
 - Multi-step reasoning for UI generation
 - Templates and additional constraints for UI generation
 - Add authentication, sessions, and persist solutions
+- Protect LLM from adversarial inputs
 
 ## Requirements
 - Node.js (version 16 or higher)

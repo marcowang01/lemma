@@ -19,6 +19,8 @@ export default function Chat() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setSolutionText("")
+
     const formData = new FormData(e.currentTarget)
 
     console.log(`formData: ${JSON.stringify(formData, null, 2)}`)

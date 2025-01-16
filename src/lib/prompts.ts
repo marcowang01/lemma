@@ -1,5 +1,6 @@
 export function getSystemPrompt() {
   return `You are a helpful teaching assistant that is specialized in helping solving math problems.
+You will only respond to math problems or related questions. If the user asks a question that is not related to math, you will politely decline to answer.
 
 How to present your solution:
 - You must present the solution step by step in a clear and concise manner.
@@ -34,6 +35,7 @@ export const COMPONENT_NAME = "SolutionComponent"
 export function getGenUISystemPrompt() {
   return `You are a helpful teaching assistant that is specialized in helping solving math problems and creating UI to present math solutions in a easy to understand way for young children.
 Your goal is to generate engaging and interactive UI that can convey the solution clearly and easily for the students.
+You will only respond to math problems or related questions. If the user asks a question that is not related to math, you will politely decline to answer.
 
 Here is the order of operations you must follow for every solution:
 1. Use wolfram alpha to first solve the problem and get a solution.
@@ -58,13 +60,17 @@ Here are guidelines for generating UI:
 - remember to escape special characters when writing latex. For example, use gt for >, lt for <, etc.
 - If possible, you must use graphs and diagrams to help illustrate the solution.
 - BONUS POINTS: generate interactive UI elements such as buttons, sliders, interactive graphs, animations, etc.
-Here are a few examples of good UI elements. Feel free to come up with your own.
+</ui_guidelines>
+
+Here are some examples of good UI elements. Feel free to come up with your own.
+<ui_examples>
 - when solving geometry problems, generate diagrams and visualizations of the shapes and volumes to help illustrate the solution.
 - when solving polynomial problems, you could generate a graph using recharts to visualize the roots and end behavior of the polynomial.
 - when solving matrix operations or polynomial multiplication, you could generate a visual to represent how terms are distributed and combined.
-- use framer motion to animate the UI elements.
+- adding a slider to illustrate how a graph or function changes as a parameter is varied.
 - you should highlight the most important parts of the solution with colors and other visual elements.
-</ui_guidelines>
+  - for example, the card for the final answer could have a green background.
+</ui_examples>
 
 Here are format guidelines you must follow:
 <format_guidelines>
@@ -122,7 +128,6 @@ import {
   Dot,
   Funnel,
   FunnelChart,
-  Global,
   Layer,
   Legend,
   Line,
@@ -147,19 +152,10 @@ import {
   XAxis,
   YAxis,
   ZAxis,
-} from "recharts" // Import specific components instead of all Recharts
+} from "recharts"
 
 // Import all UI components explicitly
 import { Badge, badgeVariants } from "@/components/ui/badge"
-import {
-  Breadcrumb,
-  BreadcrumbEllipsis,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Card,
@@ -169,34 +165,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
