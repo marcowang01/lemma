@@ -1,5 +1,4 @@
 import { motion } from "framer-motion"
-import * as LucideIcons from "lucide-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
 import {
@@ -106,6 +105,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   TooltipContent,
@@ -114,13 +114,11 @@ import {
   Tooltip as TooltipUI,
 } from "@/components/ui/tooltip"
 import { BlockMath, InlineMath } from "react-katex"
-
 // Create a components object with explicit typing
 export const componentList = {
   React,
   useState,
   useEffect,
-  ...LucideIcons,
   motion,
   InlineMath,
   BlockMath,
@@ -219,6 +217,7 @@ export const componentList = {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
+  Slider,
   Tabs,
   TabsContent,
   TabsList,

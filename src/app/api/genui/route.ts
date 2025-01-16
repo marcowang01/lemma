@@ -3,7 +3,6 @@ import { getGenUISystemPrompt } from "@/lib/prompts"
 import { transform } from "@babel/standalone"
 import { ToolMessage } from "@langchain/core/messages"
 import { getFirstFromTag } from "./utils"
-
 export async function POST(req: Request) {
   const formData = await req.formData()
   const userPrompt = formData.get("userInput") as string

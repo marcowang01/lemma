@@ -59,7 +59,7 @@ Future development plans include:
 - Follow-up questions capability
 - PDF and multiple file upload support
 - Enhanced observability and monitoring and better logging
-- Multi-step reasoning for UI generation
+- Multi-step reasoning for UI generation to generate more complex UI elements
 - Templates and additional constraints for UI generation
 - Add authentication, sessions, and persist solutions
 - Protect LLM from adversarial inputs
