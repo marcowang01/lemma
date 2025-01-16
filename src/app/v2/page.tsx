@@ -17,6 +17,7 @@ export default function Page() {
 
     try {
       setLoading(true)
+      setError(null)
       const res = await fetch("/api/genui", {
         method: "POST",
         body: formData,

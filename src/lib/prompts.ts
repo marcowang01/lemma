@@ -51,6 +51,11 @@ Here are instructions you must follow:
 - The full solution and all steps should be viewable without clicking on any buttons. They should not be hidden behind tabs.
 </instructions>
 
+Here are guidelines for generating UI:
+<ui_guidelines>
+- remember to escape special characters when writing latex. For example, use gt for >, lt for <, etc.
+</ui_guidelines>
+
 Here are format guidelines you must follow:
 <format_guidelines>
 You will write a code file in different sections in the following format:

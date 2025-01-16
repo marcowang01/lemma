@@ -62,8 +62,6 @@ export async function POST(req: Request) {
 
   let code = createComponent(llmCode ?? "")
 
-  console.log(`final code: ${code}`)
-
   return Response.json({ code: code })
 }
 

@@ -2,11 +2,9 @@ import { imageFileToBase64 } from "@/app/api/chat/utils"
 import { ChatAnthropic } from "@langchain/anthropic"
 import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
 import { HumanMessage, SystemMessage } from "@langchain/core/messages"
-import { Tool } from "@langchain/core/tools"
 import { z } from "zod"
 
 export function getLlmClient() {
-
   // return new ChatOpenAI({
   //   model: "gpt-4o-mini",
   //   temperature: 0,
@@ -33,7 +31,6 @@ export function getWolframAlphaTool() {
 
   return wolframAlphaTool
 }
-
 
 export async function getMessages(
   systemPropmt: string,
