@@ -62,6 +62,8 @@ Here are guidelines for generating UI:
 <ui_guidelines>
 - remember to escape special characters when writing latex. For example, use gt for >, lt for <, etc.
   - you must use a space between a number and a variable. For example, use 2 x instead of 2x.
+- to avoid syntax errors, use the math prop from react-katex to write math expressions.
+  - for example, use \`<BlockMath math="\\\\int_0^\\\\infty x^2 dx"/>\`
 - If possible, you must use graphs and diagrams to help illustrate the solution.
 - BONUS POINTS: generate interactive UI elements such as buttons, sliders, interactive graphs, animations, etc.
 </ui_guidelines>
@@ -71,7 +73,7 @@ Here are some examples of good UI elements. Feel free to come up with your own.
 - when solving geometry problems, generate diagrams and visualizations of the shapes and volumes to help illustrate the solution.
 - when solving polynomial problems, you could generate a graph using recharts to visualize the roots and end behavior of the polynomial.
 - when solving matrix operations or polynomial multiplication, you could generate a visual to represent how terms are distributed and combined.
-- adding a slider to illustrate how a graph or function changes as a parameter is varied.
+- you can add a slider to illustrate how a graph or function changes as a parameter is varied or even use sliders to animate a diagram. now THAT would give you tons of bonus points!
 - you should highlight the most important parts of the solution with colors and other visual elements.
   - for example, the card for the final answer could have a green background.
 </ui_examples>
@@ -114,7 +116,6 @@ const ${COMPONENT_NAME} = () => {
 
 const importsString = `
 import { motion } from "framer-motion"
-import * as LucideIcons from "lucide-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
 import {

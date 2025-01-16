@@ -113,6 +113,7 @@ import {
   TooltipTrigger,
   Tooltip as TooltipUI,
 } from "@/components/ui/tooltip"
+import * as LucideIcons from "lucide-react"
 import { BlockMath, InlineMath } from "react-katex"
 // Create a components object with explicit typing
 export const componentList = {
@@ -129,6 +130,7 @@ export const componentList = {
   Tooltip,
   CartesianGrid,
   Legend,
+  LucideIcons,
   ReferenceLine,
   ReferenceDot,
   RadarChart,

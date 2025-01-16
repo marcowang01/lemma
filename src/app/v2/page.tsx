@@ -65,7 +65,7 @@ export default function Page() {
                   {error && (
                     <div className="flex items-center gap-2 text-red-600">
                       <AlertCircle className="h-4 w-4" />
-                      <span>Error: {error}</span>
+                      <span>UI Generation Error: {error}</span>
                     </div>
                   )}
                 </CardContent>
