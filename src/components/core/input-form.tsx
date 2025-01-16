@@ -87,7 +87,7 @@ export function InputForm({
             <span className="sr-only">Close</span>
           </button>
           <div className="mt-2 w-full">
-            <Image
+            <img
               src={imageUrl ?? ""}
               alt="Math problem enlarged"
               className="max-h-[80vh] w-auto rounded-md object-contain"

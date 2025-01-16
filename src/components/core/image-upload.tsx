@@ -20,7 +20,7 @@ export function ImageUpload({
     <>
       <div className={`h-full w-full p-2`}>
         {imageUrl && (
-          <Image
+          <img
             src={imageUrl}
             alt="Math problem"
             className="h-full w-auto cursor-pointer rounded-lg object-contain transition-opacity duration-200 hover:opacity-80"

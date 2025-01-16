@@ -1,39 +1,68 @@
-# Todo
+# Math Helper
 
-- simple chat interface: type math question, get answer
-- add support for wolfram alpha to ensure accuracy
-- refine prompt + UI to showcase steps and reasoning
-- add support for image input
-- input validation and error handling
-- latex rendering
+A web application that provides step-by-step solutions to mathematical problems through text or image input.
 
-## Stretch
+![Math Helper Interface](/api/placeholder/800/400)
 
-- ask follow up questions
-  - add suggestions for follow up questions (pplx style)
-- chat bot on the side with a history of conversations
-- chat with each individual step
-- use MathPix to extract math problems from images more accurately
-- support uploading pdf
-- multistep conversation (allow user to add more images and progress)
-- auto suggest prompts for user to click and choose from
+## Quick Start
 
-- polish UI and UX
-- add some readme and deploy
-- make sure error handling is reasonable
-- add routing between pages
-- hook up images on v2
-- template approach for gen ui include imports and exports and componnet defninition
+1. Get required API keys:
+   - Anthropic API key from https://www.anthropic.com/api
+   - Wolfram App ID from https://developer.wolframalpha.com/access
 
-- refactor code into components
-- add a nicer error and loading UI
-- Make the input and image all at the top
-- add down things I would do with more time and list of features
-- make v1/v2 not two pages but just the submit is different
+2. Set up environment variables:
+   ```bash
+   ANTHROPIC_API_KEY=your_key_here
+   WOLFRAM_APP_ID=your_id_here
+   ```
 
-- text area input
-- file input, multiple images
-- converse and ask follow up questions
-- multi step reasoning for more complex problems
-- observability tools and way to inspect LLM logs
--
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Run development server:
+   ```bash
+   npm run dev
+   ```
+   Access the application at `http://localhost:3005`
+
+5. Build for production:
+   ```bash
+   npm run build
+   ```
+
+## Features
+
+### Version Toggle
+Switch between v1.0 and v2.0 using the toggle in the top right corner:
+- V1.0: Better reasoning capability and improved latency
+- V2.0: Interactive UI elements and chart generation capabilities
+
+### Current Features
+- Text input for math questions
+- Image input support (upload photos of math problems)
+- Generation of interactive UI elements (v2.0)
+- LaTeX rendering for mathematical expressions
+
+### How to Use
+1. Submit your math question through:
+   - Text input
+   - Image upload
+2. Receive a detailed step-by-step solution
+3. View generated UI elements (v2.0) or formatted mathematical expressions
+
+## Roadmap
+
+Future development plans include:
+- Follow-up questions capability
+- PDF and multiple file upload support
+- Enhanced observability and monitoring
+- Multi-step reasoning for UI generation
+- Templates and additional constraints for UI generation
+
+## Requirements
+- Node.js (version 16 or higher)
+- npm (Node Package Manager)
+- Anthropic API key
+- Wolfram App ID
