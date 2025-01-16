@@ -36,8 +36,9 @@ A web application that provides step-by-step solutions to mathematical problems 
 
 ### Version Toggle
 Switch between v1.0 and v2.0 using the toggle in the top right corner:
-- V1.0: Better reasoning capability and improved latency
-- V2.0: Interactive UI elements and chart generation capabilities
+- V1.0: Better reasoning capability and improved latency (recommended for stable use)
+- V2.0: Interactive UI elements and chart generation capabilities (experimental, may be unstable)
+
 
 ### Current Features
 - Text input for math questions
