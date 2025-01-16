@@ -73,7 +73,7 @@ export default function Page() {
             </motion.div>
           )}
         </AnimatePresence>
-        <DynamicComponent code={code ?? ""} />
+        {code && <DynamicComponent code={code} />}
       </div>
     </main>
   )

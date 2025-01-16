@@ -121,7 +121,6 @@ export const componentList = {
   useState,
   useEffect,
   ...LucideIcons,
-  LucideIcons,
   motion,
   InlineMath,
   BlockMath,

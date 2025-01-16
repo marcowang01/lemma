@@ -75,7 +75,7 @@ export async function POST(req: Request) {
   }
 
   const code = transformCode(llmCode ?? "")
-
+  console.log(`final code: ${code}`)
   return Response.json({ code: code })
 }
 

@@ -58,7 +58,7 @@ Switch between v1.0 and v2.0 using the toggle in the top right corner:
 Future development plans include:
 - Follow-up questions capability
 - PDF and multiple file upload support
-- Enhanced observability and monitoring
+- Enhanced observability and monitoring and better logging
 - Multi-step reasoning for UI generation
 - Templates and additional constraints for UI generation
 - Add authentication, sessions, and persist solutions
