@@ -3,7 +3,6 @@
 import { ImageUpload } from "@/components/core/image-upload"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { X } from "lucide-react"
-import Image from "next/image"
 import { useRef, useState } from "react"
 import { Card, CardContent } from "../ui/card"
 

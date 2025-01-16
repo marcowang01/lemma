@@ -3,6 +3,7 @@ import { getGenUISystemPrompt } from "@/lib/prompts"
 import { transform } from "@babel/standalone"
 import { ToolMessage } from "@langchain/core/messages"
 import { getFirstFromTag } from "./utils"
+import { graph1 } from "./dummy"
 
 export async function POST(req: Request) {
   const formData = await req.formData()
@@ -16,38 +17,38 @@ export async function POST(req: Request) {
   const wolframAlphaTool = getWolframAlphaTool()
   const llmWithTools = getLlmClient().bindTools([wolframAlphaTool])
 
-  let textContent = ""
-  while (true) {
-    const response = await llmWithTools.invoke(conversation)
-    console.log(`genui llm response: ${JSON.stringify(response, null, 2)}`)
+  let textContent = graph1
+  // while (true) {
+  //   const response = await llmWithTools.invoke(conversation)
+  //   console.log(`genui llm response: ${JSON.stringify(response, null, 2)}`)
 
-    conversation.push(response)
+  //   conversation.push(response)
 
-    if (response.content && response.tool_calls?.length === 0) {
-      if (typeof response.content === "string") {
-        textContent = response.content
-      } else if (response.content.length > 0 && response.content[0].type === "text_delta") {
-        textContent = response.content[0].text
-      }
-      break
-    }
+  //   if (response.content && response.tool_calls?.length === 0) {
+  //     if (typeof response.content === "string") {
+  //       textContent = response.content
+  //     } else if (response.content.length > 0 && response.content[0].type === "text_delta") {
+  //       textContent = response.content[0].text
+  //     }
+  //     break
+  //   }
 
-    if (response.tool_calls?.length && response.tool_calls?.length > 0) {
-      for (const toolCall of response.tool_calls) {
-        if (toolCall.name === "wolfram-alpha") {
-          try {
-            const toolMessage = (await wolframAlphaTool.invoke(toolCall)) as ToolMessage
+  //   if (response.tool_calls?.length && response.tool_calls?.length > 0) {
+  //     for (const toolCall of response.tool_calls) {
+  //       if (toolCall.name === "wolfram-alpha") {
+  //         try {
+  //           const toolMessage = (await wolframAlphaTool.invoke(toolCall)) as ToolMessage
 
-            conversation.push(toolMessage)
-          } catch (error) {
-            console.error("Tool invocation error:", error)
-          }
-        } else {
-          console.error("Unknown tool call:", toolCall.name)
-        }
-      }
-    }
-  }
+  //           conversation.push(toolMessage)
+  //         } catch (error) {
+  //           console.error("Tool invocation error:", error)
+  //         }
+  //       } else {
+  //         console.error("Unknown tool call:", toolCall.name)
+  //       }
+  //     }
+  //   }
+  // }
 
   if (!textContent) {
     console.error(`Text content empty for user prompt: ${userPrompt}`)
