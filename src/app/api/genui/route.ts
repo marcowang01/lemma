@@ -50,14 +50,28 @@ export async function POST(req: Request) {
   }
 
   if (!textContent) {
-    return Response.json({ error: "UI failed to generate text content" }, { status: 500 })
+    console.error(`Text content empty for user prompt: ${userPrompt}`)
+    return Response.json(
+      {
+        error:
+          "Failed to generate your solution. Please try again. You may need to simplify your question.",
+      },
+      { status: 500 }
+    )
   }
 
   const content = textContent
   const llmCode = getFirstFromTag(content, "code")
 
   if (!llmCode) {
-    return Response.json({ error: "UI failed to generate code" }, { status: 500 })
+    console.error(`No code found in content: ${content}`)
+    return Response.json(
+      {
+        error:
+          "Failed to generate your solution. Please try again. You may need to simplify your question.",
+      },
+      { status: 500 }
+    )
   }
 
   const code = transformCode(llmCode ?? "")
