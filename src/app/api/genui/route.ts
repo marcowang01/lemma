@@ -54,13 +54,13 @@ export async function POST(req: Request) {
   }
 
   const content = textContent
-  let llmCode = getFirstFromTag(content, "code")
+  const llmCode = getFirstFromTag(content, "code")
 
   if (!llmCode) {
     return Response.json({ error: "UI failed to generate code" }, { status: 500 })
   }
 
-  let code = createComponent(llmCode ?? "")
+  const code = createComponent(llmCode ?? "")
 
   return Response.json({ code: code })
 }

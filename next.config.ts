@@ -48,6 +48,14 @@ const nextConfig: NextConfig = {
       };
     }
 
+    if (!isServer && config.resolve?.fallback) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        'react/jsx-runtime': require.resolve('react/jsx-runtime'),
+        'react-dom/client': require.resolve('react-dom/client'),
+      };
+    }
+
     // Optimize production builds
     if (!dev && config.optimization) {
       config.optimization = {

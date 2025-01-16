@@ -3,6 +3,7 @@
 import { ImageUpload } from "@/components/core/image-upload"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { X } from "lucide-react"
+import Image from "next/image"
 import { useRef, useState } from "react"
 import { Card, CardContent } from "../ui/card"
 
@@ -86,7 +87,7 @@ export function InputForm({
             <span className="sr-only">Close</span>
           </button>
           <div className="mt-2 w-full">
-            <img
+            <Image
               src={imageUrl ?? ""}
               alt="Math problem enlarged"
               className="max-h-[80vh] w-auto rounded-md object-contain"

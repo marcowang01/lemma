@@ -1,6 +1,7 @@
 "use client"
 
 import { Edit, Trash2, Upload } from "lucide-react"
+import Image from "next/image"
 
 interface ImageUploadProps {
   imageUrl: string | null
@@ -19,7 +20,7 @@ export function ImageUpload({
     <>
       <div className={`h-full w-full p-2`}>
         {imageUrl && (
-          <img
+          <Image
             src={imageUrl}
             alt="Math problem"
             className="h-full w-auto cursor-pointer rounded-lg object-contain transition-opacity duration-200 hover:opacity-80"

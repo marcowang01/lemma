@@ -37,7 +37,7 @@ export async function getMessages(
   userPrompt: string,
   imageInput: File | null
 ) {
-  let messageContent: Array<{ type: string; text?: string; image_url?: { url: string } }> = [
+  const messageContent: Array<{ type: string; text?: string; image_url?: { url: string } }> = [
     { type: "text", text: userPrompt },
   ]
 

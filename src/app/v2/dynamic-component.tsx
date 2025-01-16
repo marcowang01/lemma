@@ -6,7 +6,8 @@ import { componentList } from "./component-list"
 
 function createComponent(code: string | null): React.ComponentType<any> {
   if (!code) {
-    return () => <div>No code provided</div>
+    const ErrorComponent = () => <div>No code provided</div>
+    return ErrorComponent
   }
 
   try {
@@ -22,7 +23,8 @@ function createComponent(code: string | null): React.ComponentType<any> {
     return constructorFn(componentList)
   } catch (error) {
     console.error("Error creating component:", error)
-    return () => <div>Error rendering component: {String(error)}</div>
+    const ErrorComponent = () => <div>Error rendering component: {String(error)}</div>
+    return ErrorComponent
   }
 }
 

@@ -45,7 +45,7 @@ export default function Chat() {
       }
 
       text += decoder.decode(value, { stream: true })
-      let processedText = renderLatex(text)
+      const processedText = renderLatex(text)
       const markdownHtml = marked.parse(processedText) as string
       const safeHtml = DOMPurify.sanitize(markdownHtml)
       setSolutionText(safeHtml)

@@ -1,3 +1,4 @@
+import { ChatAnthropicCallOptions } from "@langchain/anthropic"
 import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base"
 import { AIMessageChunk, BaseMessage, ToolMessage } from "@langchain/core/messages"
@@ -6,7 +7,7 @@ import { concat } from "@langchain/core/utils/stream"
 
 export async function* handleLLMStream(
   conversation: BaseMessage[],
-  llmWithTools: Runnable<BaseLanguageModelInput, AIMessageChunk, any>,
+  llmWithTools: Runnable<BaseLanguageModelInput, AIMessageChunk, ChatAnthropicCallOptions>,
   wolframAlphaTool: WolframAlphaTool
 ) {
   while (true) {
