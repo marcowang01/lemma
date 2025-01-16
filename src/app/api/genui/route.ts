@@ -60,12 +60,12 @@ export async function POST(req: Request) {
     return Response.json({ error: "UI failed to generate code" }, { status: 500 })
   }
 
-  const code = createComponent(llmCode ?? "")
+  const code = transformCode(llmCode ?? "")
 
   return Response.json({ code: code })
 }
 
-export function createComponent(code: string): string {
+function transformCode(code: string): string {
   // Transform JSX to JavaScript
   const transformed = transform(code, {
     presets: ["react", "typescript"],
