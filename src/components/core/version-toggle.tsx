@@ -29,7 +29,7 @@ export default function VersionToggle() {
   return (
     <button
       onClick={handleClick}
-      className="fixed right-2 top-2 text-lg font-thin text-foreground transition-colors hover:text-muted-foreground"
+      className="fixed right-2 top-2 text-lg font-thin border border-background rounded-md px-2 py-1 text-foreground transition-colors hover:text-muted-foreground hover:border-muted-foreground"
     >
       {isStable ? "v1.0" : "v2.0"}
     </button>
