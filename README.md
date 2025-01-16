@@ -46,6 +46,12 @@ Switch between v1.0 and v2.0 using the toggle in the top right corner:
 - Generation of interactive UI elements (v2.0)
 - LaTeX rendering for mathematical expressions
 
+### Known Limitations
+- v2.0 takes ~20-25 seconds to generate a solution
+- graphs will take an additional 10-15 seconds to render
+- latex rendering is not stable and may not render correctly
+- LLM struggle with correct syntax and using libraries and imports correctly
+
 ### How to Use
 1. Submit your math question through:
    - Text input
