@@ -47,7 +47,8 @@ export class ReasonerTool extends Tool {
 
     let reasoningTokens = ""
     for await (const chunk of completion) {
-      // @ts-expect-error
+      // @ts-expect-error - this is a property from deepseek that is not part of the openai api
+      // https://api-docs.deepseek.com/guides/reasoning_model
       const reasoningContent = chunk.choices[0]?.delta?.reasoning_content as string
 
       if (reasoningContent) {
