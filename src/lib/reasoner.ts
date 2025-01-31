@@ -15,10 +15,12 @@ export class ReasonerTool extends Tool {
     "The input is the question/solution text. The output is the final solution."
 
   enqueueMessage: (message: string) => void
-  
-  constructor(fields: ToolParams & {
-    enqueueMessage: (message: string) => void
-  }) {
+
+  constructor(
+    fields: ToolParams & {
+      enqueueMessage: (message: string) => void
+    }
+  ) {
     super(fields)
     this.enqueueMessage = fields.enqueueMessage
   }
@@ -41,6 +43,7 @@ export class ReasonerTool extends Tool {
       stream: true,
     })
 
+    let reasoningTokens = ""
     for await (const chunk of completion) {
       const content = chunk.choices[0]?.delta?.content
       // @ts-ignore
@@ -48,8 +51,12 @@ export class ReasonerTool extends Tool {
 
       console.log(`content: ${content}`)
       console.log(`reasoningContent: ${reasoningContent}`)
+      if (reasoningContent) {
+        reasoningTokens += reasoningContent
+        this.enqueueMessage(reasoningContent)
+      }
     }
 
-    return "failed to reason on input. do not try again."
+    return reasoningTokens
   }
 }
