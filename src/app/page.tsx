@@ -5,12 +5,53 @@ import { Card, CardContent } from "@/components/ui/card"
 import { renderLatex } from "@/lib/latex"
 import { ServerMessage } from "@/lib/types"
 import DOMPurify from "dompurify"
+import { ChevronDown, ChevronUp } from "lucide-react"
 import { marked } from "marked"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+
+const CollapsibleReasoning = ({ text }: { text: string }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const lastLines = text.split("\n").slice(-3).join("\n") // Show last 3 lines when collapsed
+
+  useEffect(() => {
+    if (containerRef.current && isExpanded) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight
+    }
+  }, [text, isExpanded])
+
+  return (
+    <Card className="overflow-hidden">
+      <CardContent className="p-0">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex w-full items-center justify-between p-4 hover:bg-gray-50"
+        >
+          <span className="font-medium">Reasoning Process</span>
+          {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        </button>
+        <div className="relative">
+          <div
+            ref={containerRef}
+            className={`whitespace-pre-wrap p-4 transition-all duration-200 ${
+              isExpanded ? "max-h-[500px]" : "max-h-24"
+            } overflow-y-auto`}
+          >
+            {isExpanded ? text : lastLines}
+          </div>
+          {!isExpanded && text.split("\n").length > 3 && (
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
 
 export default function Chat() {
   const [solutionText, setSolutionText] = useState<string>("")
   const [reasoningText, setReasoningText] = useState<string>("")
+  const [isThinking, setIsThinking] = useState<boolean>(false)
 
   useEffect(() => {
     marked.setOptions({
@@ -24,8 +65,6 @@ export default function Chat() {
     setSolutionText("")
     setReasoningText("")
     const formData = new FormData(e.currentTarget)
-
-    console.log(`formData: ${JSON.stringify(formData, null, 2)}`)
 
     const response = await fetch("/api/chat", {
       method: "POST",
@@ -43,22 +82,17 @@ export default function Chat() {
     let text = ""
     let reasoningText = ""
 
+    setIsThinking(true)
     while (true) {
       const { done, value } = await reader.read()
-      if (done) {
-        break
-      }
+      if (done) break
 
       const rawResponse = decoder.decode(value, { stream: true })
-      console.log(`RAW RESPONSE: ${rawResponse}`)
-
       const lines = rawResponse.split("\n")
-      for (const line of lines) {
-        if (line.trim() === "") {
-          continue
-        }
 
-        console.log(`LINE: ${line}`)
+      for (const line of lines) {
+        if (line.trim() === "") continue
+
         const serverMessage: ServerMessage = JSON.parse(line)
 
         switch (serverMessage.type) {
@@ -79,12 +113,14 @@ export default function Chat() {
         }
       }
     }
+    setIsThinking(false)
   }
 
   return (
     <main className="container mx-auto max-w-4xl p-4">
       <div className="grid gap-8 md:grid-cols-1">
         <InputForm onSubmit={handleSubmit} />
+        {reasoningText && <CollapsibleReasoning text={reasoningText} />}
         {solutionText && (
           <Card className="overflow-hidden">
             <CardContent className="relative flex h-full flex-col p-4">
@@ -92,13 +128,7 @@ export default function Chat() {
                 className="markdown mb-auto h-full w-full"
                 dangerouslySetInnerHTML={{ __html: solutionText }}
               />
-            </CardContent>
-          </Card>
-        )}
-        {reasoningText && (
-          <Card className="overflow-hidden">
-            <CardContent className="relative flex h-full flex-col whitespace-pre-wrap p-4">
-              {reasoningText}
+              {isThinking && <div className="text-sm text-gray-500">Thinking...</div>}
             </CardContent>
           </Card>
         )}
