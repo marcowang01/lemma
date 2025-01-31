@@ -1,6 +1,7 @@
 import { getLlmClient, getMessages, getWolframAlphaTool } from "@/lib/llm"
 import { getSystemPrompt } from "@/lib/prompts"
 import { ReasonerTool } from "@/lib/reasoner"
+import { ServerMessage } from "@/lib/types"
 import { ChatAnthropicCallOptions } from "@langchain/anthropic"
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base"
 import { AIMessageChunk } from "@langchain/core/messages"
@@ -26,8 +27,8 @@ export async function POST(req: Request) {
     async start(controller) {
       let isClosed = false
 
-      const enqueueMessage = (message: string) => {
-        controller.enqueue(message)
+      const enqueueMessage = (message: ServerMessage) => {
+        controller.enqueue(JSON.stringify(message) + "\n")
       }
 
       const conversation = await getMessages(getSystemPrompt(), userPrompt, imageInput)
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
           reasonerTool
         )
         for await (const chunk of generator) {
-          enqueueMessage(chunk)
+          enqueueMessage({ type: "response", content: chunk })
         }
       } catch (err) {
         console.error("Stream error:", err)

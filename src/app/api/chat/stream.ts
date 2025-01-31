@@ -19,7 +19,7 @@ export async function* handleLLMStream(
     for await (const chunk of iterator) {
       // Stream content back to the client
       if (chunk.tool_calls?.length === 0 && chunk.content && chunk.getType() === "ai") {
-        console.log("Chunk content:", chunk.content)
+        // console.log("Chunk content:", chunk.content)
 
         if (typeof chunk.content === "string") {
           yield chunk.content

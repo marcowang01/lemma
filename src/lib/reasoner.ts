@@ -1,6 +1,7 @@
 // reasoner.ts
 import { Tool, ToolParams } from "@langchain/core/tools"
 import OpenAI from "openai"
+import { ServerMessage } from "./types"
 
 /**
  * If you wish to do a standard (non-streaming) tool invocation,
@@ -14,11 +15,11 @@ export class ReasonerTool extends Tool {
     "Use this tool to produce the final refined answer after verifying with wolfram alpha. " +
     "The input is the question/solution text. The output is the final solution."
 
-  enqueueMessage: (message: string) => void
+  enqueueMessage: (message: ServerMessage) => void
 
   constructor(
     fields: ToolParams & {
-      enqueueMessage: (message: string) => void
+      enqueueMessage: (message: ServerMessage) => void
     }
   ) {
     super(fields)
@@ -45,15 +46,13 @@ export class ReasonerTool extends Tool {
 
     let reasoningTokens = ""
     for await (const chunk of completion) {
-      const content = chunk.choices[0]?.delta?.content
+      const content = chunk.choices[0]?.delta?.content as string
       // @ts-ignore
-      const reasoningContent = chunk.choices[0]?.delta?.reasoning_content
+      const reasoningContent = chunk.choices[0]?.delta?.reasoning_content as string
 
-      console.log(`content: ${content}`)
-      console.log(`reasoningContent: ${reasoningContent}`)
       if (reasoningContent) {
         reasoningTokens += reasoningContent
-        this.enqueueMessage(reasoningContent)
+        this.enqueueMessage({ type: "reasoning", content: reasoningContent })
       }
     }
 
