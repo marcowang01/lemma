@@ -8,6 +8,7 @@ import DOMPurify from "dompurify"
 import { marked } from "marked"
 import { useEffect, useState } from "react"
 import { CollapsibleReasoning } from "./reasoning"
+import { ThinkingIndicator } from "./thinking"
 
 export default function Chat() {
   const [solutionText, setSolutionText] = useState<string>("")
@@ -89,7 +90,11 @@ export default function Chat() {
                 className="markdown mb-auto h-full w-full"
                 dangerouslySetInnerHTML={{ __html: solutionText }}
               />
-              {isThinking && <div className="px-4 text-sm text-gray-500">Thinking...</div>}
+              {isThinking && (
+                <div className="mt-2 px-4">
+                  <ThinkingIndicator />
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
