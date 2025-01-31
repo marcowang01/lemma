@@ -36,7 +36,8 @@ export class ReasonerTool extends Tool {
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant. you solve math problems step by step.",
+          content:
+            "You are a helpful assistant. Your task is to come up with a step by step solution to solve a particular math problem.",
         },
         { role: "user", content: input },
       ],

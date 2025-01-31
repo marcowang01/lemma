@@ -20,6 +20,8 @@ Strictly follow these instructions when writing your solution:
       3bc. You should NEVER present a step or solution without a showing your work.
       3bd. You must show your work for every result you get.
 
+Remember, before writing your solution, you must first use the wolfram alpha tool and the reasoner tool to plan out your solution.
+
 Rules for formatting you must follow:
 - You must use latex and markdown to format your response.
 - All math expressions, symbols, numbers, equations, etc. must be written in latex.
