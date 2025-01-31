@@ -1,6 +1,7 @@
 // reasoner.ts
 import { Tool } from "@langchain/core/tools"
-import { ChatOpenAI } from "@langchain/openai"
+import OpenAI from "openai"
+
 /**
  * If you wish to do a standard (non-streaming) tool invocation,
  * you can use a typical Tool with an async `_call()`. Shown here
@@ -13,19 +14,32 @@ export class ReasonerTool extends Tool {
     "Use this tool to produce the final refined answer after verifying with wolfram alpha. " +
     "The input is the question/solution text. The output is the final solution."
 
-  // We won't do chunk-based streaming here. This is a simple single response example.
   async _call(input: string): Promise<string> {
-    const llm = new ChatOpenAI({
-      model: "deepseek-reasoner",
-      openAIApiKey: process.env.DEEPSEEK_API_KEY,
-      configuration: {
-        baseURL: "https://api.deepseek.com",
-      },
+    const openai = new OpenAI({
+      baseURL: "https://api.deepseek.com",
+      apiKey: process.env.DEEPSEEK_API_KEY,
     })
 
-    const response = await llm.invoke(input)
+    const completion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant. you solve math problems step by step.",
+        },
+        { role: "user", content: input },
+      ],
+      model: "deepseek-reasoner",
+      stream: true,
+    })
 
-    console.log(`deepseekresponse: ${JSON.stringify(response, null, 2)}`)
+    for await (const chunk of completion) {
+      const content = chunk.choices[0]?.delta?.content
+      // @ts-ignore
+      const reasoningContent = chunk.choices[0]?.delta?.reasoning_content
+
+      console.log(`content: ${content}`)
+      console.log(`reasoningContent: ${reasoningContent}`)
+    }
 
     return "failed to reason on input. do not try again."
   }

@@ -1,5 +1,6 @@
 import { getLlmClient, getMessages, getWolframAlphaTool } from "@/lib/llm"
 import { getSystemPrompt } from "@/lib/prompts"
+import { ReasonerTool } from "@/lib/reasoner"
 import { ChatAnthropicCallOptions } from "@langchain/anthropic"
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base"
 import { AIMessageChunk } from "@langchain/core/messages"
@@ -22,7 +23,8 @@ export async function POST(req: Request) {
 
   const conversation = await getMessages(getSystemPrompt(), userPrompt, imageInput)
   const wolframAlphaTool = getWolframAlphaTool()
-  const llmWithTools = getLlmClient().bindTools([wolframAlphaTool])
+  const reasonerTool = new ReasonerTool()
+  const llmWithTools = getLlmClient().bindTools([wolframAlphaTool, reasonerTool])
 
   // Convert async generator to ReadableStream
   const stream = new ReadableStream({
@@ -36,7 +38,8 @@ export async function POST(req: Request) {
             AIMessageChunk,
             ChatAnthropicCallOptions
           >,
-          wolframAlphaTool
+          wolframAlphaTool,
+          reasonerTool
         )
         for await (const chunk of generator) {
           controller.enqueue(chunk)

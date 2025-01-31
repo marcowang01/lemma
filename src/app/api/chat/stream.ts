@@ -1,3 +1,4 @@
+import { ReasonerTool } from "@/lib/reasoner"
 import { ChatAnthropicCallOptions } from "@langchain/anthropic"
 import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base"
@@ -8,7 +9,8 @@ import { concat } from "@langchain/core/utils/stream"
 export async function* handleLLMStream(
   conversation: BaseMessage[],
   llmWithTools: Runnable<BaseLanguageModelInput, AIMessageChunk, ChatAnthropicCallOptions>,
-  wolframAlphaTool: WolframAlphaTool
+  wolframAlphaTool: WolframAlphaTool,
+  reasonerTool: ReasonerTool
 ) {
   while (true) {
     const iterator = await llmWithTools.stream(conversation)
@@ -28,7 +30,10 @@ export async function* handleLLMStream(
       gathered = gathered !== undefined ? concat(gathered, chunk) : chunk
     }
 
-    console.log(`iteration done Gathered: ${JSON.stringify(gathered, null, 2)}`)
+    console.log(`iteration done Gathered: 
+      content: ${JSON.stringify(gathered?.content, null, 2)}
+      tool_calls: ${JSON.stringify(gathered?.tool_calls, null, 2)}
+`)
 
     // Finalize AI message with accumulated content
     if (gathered) {
@@ -52,6 +57,10 @@ export async function* handleLLMStream(
           console.error("Tool invocation error:", error)
           yield `<span style="color: red;">Tool invocation failed: ${String(error)}</span>`
         }
+      } else if (toolCall.name === "reasoner") {
+        const toolMessage = (await reasonerTool.invoke(toolCall)) as ToolMessage
+        conversation.push(toolMessage)
+        
       } else {
         console.error("Unknown tool call:", toolCall.name)
         yield `<span style="color: red;">Unknown tool: ${toolCall.name}</span>`
