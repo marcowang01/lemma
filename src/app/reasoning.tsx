@@ -26,6 +26,8 @@ export const CollapsibleReasoning = ({ text }: { text: string }) => {
           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </button>
         <div className="relative">
+          <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-8 bg-gradient-to-b from-white to-transparent" />
+
           <div
             ref={containerRef}
             className={`whitespace-pre-wrap p-4 transition-all duration-200 ${
@@ -35,7 +37,7 @@ export const CollapsibleReasoning = ({ text }: { text: string }) => {
             {text}
           </div>
           {!isExpanded && (
-            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
           )}
         </div>
       </CardContent>

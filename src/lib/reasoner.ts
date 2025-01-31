@@ -47,8 +47,7 @@ export class ReasonerTool extends Tool {
 
     let reasoningTokens = ""
     for await (const chunk of completion) {
-      const content = chunk.choices[0]?.delta?.content as string
-      // @ts-ignore
+      // @ts-expect-error
       const reasoningContent = chunk.choices[0]?.delta?.reasoning_content as string
 
       if (reasoningContent) {
