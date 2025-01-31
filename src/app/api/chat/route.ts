@@ -21,15 +21,20 @@ export async function POST(req: Request) {
     return new Response("No user prompt provided", { status: 400 })
   }
 
-  const conversation = await getMessages(getSystemPrompt(), userPrompt, imageInput)
-  const wolframAlphaTool = getWolframAlphaTool()
-  const reasonerTool = new ReasonerTool()
-  const llmWithTools = getLlmClient().bindTools([wolframAlphaTool, reasonerTool])
-
   // Convert async generator to ReadableStream
   const stream = new ReadableStream({
     async start(controller) {
       let isClosed = false
+
+      const enqueueMessage = (message: string) => {
+        controller.enqueue(message)
+      }
+
+      const conversation = await getMessages(getSystemPrompt(), userPrompt, imageInput)
+      const wolframAlphaTool = getWolframAlphaTool()
+      const reasonerTool = new ReasonerTool({ enqueueMessage })
+      const llmWithTools = getLlmClient().bindTools([wolframAlphaTool, reasonerTool])
+
       try {
         const generator = handleLLMStream(
           conversation,
@@ -42,7 +47,7 @@ export async function POST(req: Request) {
           reasonerTool
         )
         for await (const chunk of generator) {
-          controller.enqueue(chunk)
+          enqueueMessage(chunk)
         }
       } catch (err) {
         console.error("Stream error:", err)

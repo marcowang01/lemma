@@ -1,5 +1,5 @@
 // reasoner.ts
-import { Tool } from "@langchain/core/tools"
+import { Tool, ToolParams } from "@langchain/core/tools"
 import OpenAI from "openai"
 
 /**
@@ -13,6 +13,15 @@ export class ReasonerTool extends Tool {
   description =
     "Use this tool to produce the final refined answer after verifying with wolfram alpha. " +
     "The input is the question/solution text. The output is the final solution."
+
+  enqueueMessage: (message: string) => void
+  
+  constructor(fields: ToolParams & {
+    enqueueMessage: (message: string) => void
+  }) {
+    super(fields)
+    this.enqueueMessage = fields.enqueueMessage
+  }
 
   async _call(input: string): Promise<string> {
     const openai = new OpenAI({

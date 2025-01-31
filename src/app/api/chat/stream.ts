@@ -11,7 +11,7 @@ export async function* handleLLMStream(
   llmWithTools: Runnable<BaseLanguageModelInput, AIMessageChunk, ChatAnthropicCallOptions>,
   wolframAlphaTool: WolframAlphaTool,
   reasonerTool: ReasonerTool
-) {
+): AsyncGenerator<string> {
   while (true) {
     const iterator = await llmWithTools.stream(conversation)
     let gathered: AIMessageChunk | undefined = undefined
@@ -58,9 +58,14 @@ export async function* handleLLMStream(
           yield `<span style="color: red;">Tool invocation failed: ${String(error)}</span>`
         }
       } else if (toolCall.name === "reasoner") {
+
         const toolMessage = (await reasonerTool.invoke(toolCall)) as ToolMessage
         conversation.push(toolMessage)
-        
+
+        // TODO: stream the reasoning tokens and also don't include final content in tool response
+        // can try to return the stream inside of _call but idk if that works with langchain invoke
+        // can see if we can yield something while having it ultimately resolve as a string
+
       } else {
         console.error("Unknown tool call:", toolCall.name)
         yield `<span style="color: red;">Unknown tool: ${toolCall.name}</span>`
