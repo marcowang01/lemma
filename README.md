@@ -70,8 +70,26 @@ Future development plans include:
 - Add authentication, sessions, and persist solutions
 - Protect LLM from adversarial inputs
 
+
 ## Requirements
 - Node.js (version 16 or higher)
 - npm (Node Package Manager)
 - Anthropic API key
 - Wolfram App ID
+
+
+Path to production
+More features depending on who we are serving and what is the goal of the launch:
+- latency requirements
+- learning and follow up components?
+- purely solution? Store history? track progress? 
+- review features?
+- multistep reasoning? 
+- better UI for uploading files and using multiple files
+
+Bug Fixes:
+- better propmting with examples to make sure latex is correct
+- templating for known question types
+- 
+
+Notes on prompting pipelines
