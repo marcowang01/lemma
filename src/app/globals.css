@@ -183,3 +183,15 @@ body {
     transform: translateY(-5px);
   }
 }
+
+/* Remove scrollbar background */
+::-webkit-scrollbar {
+  background: transparent;
+  width: 5px;
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}

@@ -22,7 +22,7 @@ export const CollapsibleReasoning = ({ text }: { text: string }) => {
           onClick={() => setIsExpanded(!isExpanded)}
           className="flex w-full items-center justify-between p-4 hover:bg-gray-50"
         >
-          <span className="font-medium">Reasoning Process</span>
+          <span className="text-sm text-gray-600">thinking out loud...</span>
           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </button>
         <div className="relative">
@@ -30,7 +30,7 @@ export const CollapsibleReasoning = ({ text }: { text: string }) => {
 
           <div
             ref={containerRef}
-            className={`whitespace-pre-wrap p-4 transition-all duration-200 ${
+            className={`whitespace-pre-wrap p-4 text-sm text-gray-600 transition-all duration-200 ${
               isExpanded ? "max-h-[500px]" : "max-h-24"
             } overflow-y-auto`}
           >
