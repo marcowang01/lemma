@@ -1,4 +1,5 @@
 import { ReasonerTool } from "@/lib/reasoner"
+import { ServerMessage } from "@/lib/types"
 import { ChatAnthropicCallOptions } from "@langchain/anthropic"
 import { WolframAlphaTool } from "@langchain/community/tools/wolframalpha"
 import { BaseLanguageModelInput } from "@langchain/core/language_models/base"
@@ -11,8 +12,10 @@ export async function* handleLLMStream(
   llmWithTools: Runnable<BaseLanguageModelInput, AIMessageChunk, ChatAnthropicCallOptions>,
   wolframAlphaTool: WolframAlphaTool,
   reasonerTool: ReasonerTool
-): AsyncGenerator<string> {
+): AsyncGenerator<ServerMessage> {
+  let iteration = 0
   while (true) {
+    iteration++
     const iterator = await llmWithTools.stream(conversation)
     let gathered: AIMessageChunk | undefined = undefined
 
@@ -22,9 +25,9 @@ export async function* handleLLMStream(
         // console.log("Chunk content:", chunk.content)
 
         if (typeof chunk.content === "string") {
-          yield chunk.content
+          yield { type: "response", stepIdx: iteration, content: chunk.content }
         } else if (chunk.content.length > 0 && chunk.content[0].type === "text_delta") {
-          yield chunk.content[0].text
+          yield { type: "response", stepIdx: iteration, content: chunk.content[0].text }
         }
       }
       gathered = gathered !== undefined ? concat(gathered, chunk) : chunk
@@ -55,20 +58,22 @@ export async function* handleLLMStream(
           conversation.push(toolMessage)
         } catch (error) {
           console.error("Tool invocation error:", error)
-          yield `<span style="color: red;">Tool invocation failed: ${String(error)}</span>`
+          yield {
+            type: "error",
+            stepIdx: iteration,
+            content: `Tool invocation failed: ${String(error)}`,
+          }
         }
       } else if (toolCall.name === "reasoner") {
-
         const toolMessage = (await reasonerTool.invoke(toolCall)) as ToolMessage
         conversation.push(toolMessage)
 
         // TODO: stream the reasoning tokens and also don't include final content in tool response
         // can try to return the stream inside of _call but idk if that works with langchain invoke
         // can see if we can yield something while having it ultimately resolve as a string
-
       } else {
         console.error("Unknown tool call:", toolCall.name)
-        yield `<span style="color: red;">Unknown tool: ${toolCall.name}</span>`
+        yield { type: "error", stepIdx: iteration, content: `Unknown tool: ${toolCall.name}` }
       }
     }
   }

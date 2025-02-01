@@ -48,7 +48,7 @@ export async function POST(req: Request) {
           reasonerTool
         )
         for await (const chunk of generator) {
-          enqueueMessage({ type: "response", content: chunk })
+          enqueueMessage(chunk)
         }
       } catch (err) {
         console.error("Stream error:", err)
