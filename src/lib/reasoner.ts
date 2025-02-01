@@ -46,6 +46,7 @@ export class ReasonerTool extends Tool {
     })
 
     let reasoningTokens = ""
+    const timeStamp = Date.now()
     for await (const chunk of completion) {
       // @ts-expect-error - this is a property from deepseek that is not part of the openai api
       // https://api-docs.deepseek.com/guides/reasoning_model
@@ -53,7 +54,7 @@ export class ReasonerTool extends Tool {
 
       if (reasoningContent) {
         reasoningTokens += reasoningContent
-        this.enqueueMessage({ type: "reasoning", content: reasoningContent })
+        this.enqueueMessage({ type: "reasoning", stepIdx: timeStamp, content: reasoningContent })
       }
     }
 

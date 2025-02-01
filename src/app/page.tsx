@@ -6,7 +6,7 @@ import { renderLatex } from "@/lib/latex"
 import { ServerMessage } from "@/lib/types"
 import DOMPurify from "dompurify"
 import { marked } from "marked"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { CollapsibleReasoning } from "./reasoning"
 import { ThinkingIndicator } from "./thinking"
 
@@ -14,6 +14,7 @@ export default function Chat() {
   const [solutionText, setSolutionText] = useState<string>("")
   const [reasoningText, setReasoningText] = useState<string>(``)
   const [isThinking, setIsThinking] = useState<boolean>(false)
+  const stepIdx = useRef(0)
 
   useEffect(() => {
     marked.setOptions({
@@ -59,6 +60,11 @@ export default function Chat() {
 
         switch (serverMessage.type) {
           case "response":
+            if (stepIdx.current !== serverMessage.stepIdx) {
+              text = ""
+              stepIdx.current = serverMessage.stepIdx
+            }
+
             text += serverMessage.content
             const processedText = renderLatex(text)
             const markdownHtml = marked.parse(processedText) as string
