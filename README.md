@@ -63,12 +63,15 @@ Switch between v1.0 and v2.0 using the toggle in the top right corner:
 
 Future development plans include:
 - Follow-up questions capability
+  - highlight to follow-up
+- Choose to use r1 or not
+- Add templated generated UI elements at the end?
+- Change to iframe instead of dangerouslySetInnerHTML
+
 - PDF and multiple file upload support
 - Enhanced observability and monitoring and better logging
 - Multi-step reasoning for UI generation to generate more complex UI elements
-- Templates and additional constraints for UI generation
 - Add authentication, sessions, and persist solutions
-- Protect LLM from adversarial inputs
 
 
 ## Requirements
@@ -76,20 +79,3 @@ Future development plans include:
 - npm (Node Package Manager)
 - Anthropic API key
 - Wolfram App ID
-
-
-Path to production
-More features depending on who we are serving and what is the goal of the launch:
-- latency requirements
-- learning and follow up components?
-- purely solution? Store history? track progress? 
-- review features?
-- multistep reasoning? 
-- better UI for uploading files and using multiple files
-
-Bug Fixes:
-- better propmting with examples to make sure latex is correct
-- templating for known question types
-- 
-
-Notes on prompting pipelines
