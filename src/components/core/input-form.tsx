@@ -3,18 +3,32 @@
 import { ImageUpload } from "@/components/core/image-upload"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { X } from "lucide-react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Card, CardContent } from "../ui/card"
 
 export function InputForm({
   onSubmit,
+  disabled,
 }: {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
+  disabled?: boolean
 }) {
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [userInput, setUserInput] = useState<string>("")
   const [isModalOpen, setIsModalOpen] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      // Reset height to auto to get the correct scrollHeight
+      textareaRef.current.style.height = "auto"
+
+      // Calculate the new height (min 24px for single line, max ~240px for 10 lines)
+      const newHeight = Math.min(Math.max(textareaRef.current.scrollHeight, 24), 240)
+      textareaRef.current.style.height = `${newHeight}px`
+    }
+  }, [userInput])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -52,26 +66,37 @@ export function InputForm({
             onImageChange={handleImageChange}
             onClearImage={handleClearImage}
             onImageClick={() => setIsModalOpen(true)}
+            disabled={disabled}
           />
         </CardContent>
       </Card>
       <Card className="overflow-hidden">
         <CardContent className="relative h-fit w-full p-0">
-          <div className="m-2 flex w-[calc(100%-1rem)] gap-2">
-            <input
-              className="flex-1 rounded p-2 ring-offset-background focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+          <div className="m-2 flex w-[calc(100%-1rem)] flex-row items-end gap-2">
+            <textarea
+              ref={textareaRef}
+              className="w-full resize-none rounded p-2 ring-offset-background focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:bg-transparent"
               name="userInput"
               value={userInput}
               placeholder="Type and/or upload your math problem..."
               onChange={(e) => setUserInput(e.target.value)}
+              rows={1}
+              style={{
+                minHeight: "24px",
+                maxHeight: "240px",
+                overflow: userInput.split("\n").length > 10 ? "auto" : "hidden",
+              }}
+              disabled={disabled}
             />
-            <button
-              type="submit"
-              className="rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={!userInput && !imageUrl}
-            >
-              Submit
-            </button>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="h-fit rounded-lg bg-primary px-4 py-2 text-white transition-colors duration-200 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={!userInput && !imageUrl || disabled}
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </CardContent>
       </Card>

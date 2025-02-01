@@ -87,7 +87,7 @@ export default function Chat() {
   return (
     <main className="container mx-auto max-w-4xl p-4">
       <div className="grid gap-8 md:grid-cols-1">
-        <InputForm onSubmit={handleSubmit} />
+        <InputForm onSubmit={handleSubmit} disabled={isThinking} />
         {reasoningText && <CollapsibleReasoning text={reasoningText} />}
         {solutionText && (
           <Card className="overflow-hidden">

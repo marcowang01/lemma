@@ -7,6 +7,7 @@ interface ImageUploadProps {
   onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onClearImage: () => void
   onImageClick: () => void
+  disabled?: boolean
 }
 
 export function ImageUpload({
@@ -14,6 +15,7 @@ export function ImageUpload({
   onImageChange,
   onClearImage,
   onImageClick,
+  disabled,
 }: ImageUploadProps) {
   return (
     <>
@@ -36,6 +38,7 @@ export function ImageUpload({
           onChange={onImageChange}
           className="hidden"
           id="photo-upload"
+          disabled={disabled}
         />
 
         <label
