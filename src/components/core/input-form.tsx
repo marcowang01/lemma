@@ -84,15 +84,15 @@ export function InputForm({
               style={{
                 minHeight: "24px",
                 maxHeight: "240px",
-                overflow: userInput.split("\n").length > 10 ? "auto" : "hidden",
+                overflow: "auto",
               }}
               disabled={disabled}
             />
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="h-fit rounded-lg bg-primary px-4 py-2 text-white transition-colors duration-200 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-                disabled={!userInput && !imageUrl || disabled}
+                className="h-fit rounded-lg bg-primary px-4 py-2 text-white transition-colors duration-200 hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={(!userInput && !imageUrl) || disabled}
               >
                 Submit
               </button>

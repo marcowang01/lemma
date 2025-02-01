@@ -27,6 +27,8 @@ export default function Chat() {
     e.preventDefault()
     setSolutionText("")
     setReasoningText("")
+    setIsThinking(true)
+
     const formData = new FormData(e.currentTarget)
 
     const response = await fetch("/api/chat", {
@@ -45,7 +47,6 @@ export default function Chat() {
     let text = ""
     let reasoningText = ""
 
-    setIsThinking(true)
     while (true) {
       const { done, value } = await reader.read()
       if (done) break
@@ -91,13 +92,13 @@ export default function Chat() {
         {reasoningText && <CollapsibleReasoning text={reasoningText} />}
         {solutionText && (
           <Card className="overflow-hidden">
-            <CardContent className="relative flex h-full flex-col p-4">
+            <CardContent className="relative flex h-full flex-col px-0 py-2">
               <div
                 className="markdown mb-auto h-full w-full"
                 dangerouslySetInnerHTML={{ __html: solutionText }}
               />
               {isThinking && (
-                <div className="mt-2 px-4">
+                <div className="my-2 px-4">
                   <ThinkingIndicator />
                 </div>
               )}

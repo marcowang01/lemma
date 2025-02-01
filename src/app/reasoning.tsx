@@ -25,12 +25,12 @@ export const CollapsibleReasoning = ({ text }: { text: string }) => {
           <span className="text-sm text-gray-600">thinking out loud...</span>
           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </button>
-        <div className="relative px-1">
+        <div className="relative">
           <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-8 bg-gradient-to-b from-white to-transparent" />
 
           <div
             ref={containerRef}
-            className={`whitespace-pre-wrap px-3 py-4 text-sm text-gray-600 transition-all duration-200 ${
+            className={`whitespace-pre-wrap p-4 text-sm text-gray-600 transition-all duration-200 ${
               isExpanded ? "max-h-[500px]" : "max-h-24"
             } overflow-y-auto`}
           >
