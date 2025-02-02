@@ -16,24 +16,28 @@ export function InputForm({
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [userInput, setUserInput] = useState<string>("")
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     if (textareaRef.current) {
-      // Reset height to auto to get the correct scrollHeight
       textareaRef.current.style.height = "auto"
-
-      // Calculate the new height (min 24px for single line, max ~240px for 10 lines)
       const newHeight = Math.min(Math.max(textareaRef.current.scrollHeight, 24), 240)
       textareaRef.current.style.height = `${newHeight}px`
     }
   }, [userInput])
 
+  const handleImageFile = (file: File) => {
+    if (file.type.startsWith("image/")) {
+      setImageUrl(URL.createObjectURL(file))
+    }
+  }
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      setImageUrl(URL.createObjectURL(file))
+      handleImageFile(file)
     }
   }
 
@@ -43,6 +47,46 @@ export function InputForm({
       const fileInput = formRef.current.querySelector('input[type="file"]') as HTMLInputElement
       if (fileInput) {
         fileInput.value = ""
+      }
+    }
+  }
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    if (disabled) return
+
+    const items = e.clipboardData.items
+    for (const item of items) {
+      if (item.type.startsWith("image/")) {
+        const file = item.getAsFile()
+        if (file) {
+          handleImageFile(file)
+          break
+        }
+      }
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+
+    if (disabled) return
+
+    const items = e.dataTransfer.files
+    for (const item of items) {
+      if (item.type.startsWith("image/")) {
+        handleImageFile(item)
+        break
       }
     }
   }
@@ -58,8 +102,18 @@ export function InputForm({
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
-      <Card className="overflow-hidden">
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      onPaste={handlePaste}
+      className="flex w-full flex-col gap-4"
+    >
+      <Card
+        className={`overflow-hidden ${isDragging ? "ring-2 ring-primary" : ""}`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <CardContent className="relative h-[200px] w-full p-0">
           <ImageUpload
             imageUrl={imageUrl}
