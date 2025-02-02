@@ -4,6 +4,7 @@ import { Edit, Trash2, Upload } from "lucide-react"
 
 interface ImageUploadProps {
   imageUrl: string | null
+  fileInputRef: React.RefObject<HTMLInputElement | null>
   onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onClearImage: () => void
   onImageClick: () => void
@@ -12,6 +13,7 @@ interface ImageUploadProps {
 
 export function ImageUpload({
   imageUrl,
+  fileInputRef,
   onImageChange,
   onClearImage,
   onImageClick,
@@ -32,6 +34,7 @@ export function ImageUpload({
 
       <div className="pointer-events-none absolute inset-0">
         <input
+          ref={fileInputRef}
           type="file"
           name="imageInput"
           accept="image/*"

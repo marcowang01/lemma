@@ -19,6 +19,7 @@ export function InputForm({
   const [isDragging, setIsDragging] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -28,26 +29,40 @@ export function InputForm({
     }
   }, [userInput])
 
-  const handleImageFile = (file: File) => {
+  useEffect(() => {
+    return () => {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl)
+      }
+    }
+  }, [imageUrl])
+
+  const handleImageFile = (file: File, disableDataTransfer?: boolean) => {
     if (file.type.startsWith("image/")) {
       setImageUrl(URL.createObjectURL(file))
+
+      if (fileInputRef.current && !disableDataTransfer) {
+        const dataTransfer = new DataTransfer()
+        dataTransfer.items.add(file)
+        fileInputRef.current.files = dataTransfer.files
+      }
     }
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      handleImageFile(file)
+      handleImageFile(file, true)
     }
   }
 
   const handleClearImage = () => {
+    if (imageUrl) {
+      URL.revokeObjectURL(imageUrl)
+    }
     setImageUrl(null)
-    if (formRef.current) {
-      const fileInput = formRef.current.querySelector('input[type="file"]') as HTMLInputElement
-      if (fileInput) {
-        fileInput.value = ""
-      }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
     }
   }
 
@@ -117,6 +132,7 @@ export function InputForm({
         <CardContent className="relative h-[200px] w-full p-0">
           <ImageUpload
             imageUrl={imageUrl}
+            fileInputRef={fileInputRef}
             onImageChange={handleImageChange}
             onClearImage={handleClearImage}
             onImageClick={() => setIsModalOpen(true)}
