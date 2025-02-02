@@ -134,6 +134,14 @@ export function InputForm({
               value={userInput}
               placeholder="Type and/or upload your math problem..."
               onChange={(e) => setUserInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault()
+                  if (!disabled && (userInput || imageUrl)) {
+                    formRef.current?.requestSubmit()
+                  }
+                }
+              }}
               rows={1}
               style={{
                 minHeight: "24px",

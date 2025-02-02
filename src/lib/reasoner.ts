@@ -12,8 +12,9 @@ import { ServerMessage } from "./types"
 export class ReasonerTool extends Tool {
   name = "reasoner"
   description =
-    "Use this tool to produce the final refined answer after verifying with wolfram alpha. " +
-    "The input is the question/solution text. The output is the final solution."
+    "Use this tool to complete complex math problems that require multiple steps and logical reasoning. " +
+    "The input is the math question that requires multiple steps to solve. Give the reasoner as much context as possible. " +
+    "The output is the final solution."
 
   enqueueMessage: (message: ServerMessage) => void
 
