@@ -70,6 +70,10 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  .cream-radial-gradient {
+    background: radial-gradient(circle at center, #FEF6CC 0%, #EAE8DD 69%, #F5F5F5 100%);
+  }
 }
 
 .markdown {

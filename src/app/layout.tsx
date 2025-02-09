@@ -1,4 +1,3 @@
-import VersionToggle from "@/components/core/version-toggle"
 import "./globals.css"
 
 export default function RootLayout({
@@ -9,8 +8,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <VersionToggle />
-        {children}
+        <div className="cream-radial-gradient h-screen w-screen">{children}</div>
       </body>
     </html>
   )

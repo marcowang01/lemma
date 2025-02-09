@@ -9,6 +9,10 @@
 - add prompt templates (see o3 placeholders from openAI)
 - programatically add genUI elements at the end of each step or solution
 - (optional) add next auth to control generation
+- get rid of v2 and genUI
+- set budget limits of 5 dollars
+- add sign up with email verification magic link
+   - 
 
 ## Future
 - Change to iframe instead of dangerouslySetInnerHTML

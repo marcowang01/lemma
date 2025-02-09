@@ -9,6 +9,10 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        "cream-gradient":
+          "radial-gradient(circle at center, #FEF6CC 0%, #EAE8DD 69%, #F5F5F5 100%)",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
