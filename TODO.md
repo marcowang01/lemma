@@ -8,7 +8,7 @@
    - use flash 2 or o3-mini instead of r1
 - add prompt templates (see o3 placeholders from openAI)
 - programatically add genUI elements at the end of each step or solution
-
+- (optional) add next auth to control generation
 
 ## Future
 - Change to iframe instead of dangerouslySetInnerHTML
