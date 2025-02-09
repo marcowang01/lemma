@@ -59,22 +59,6 @@ Switch between v1.0 and v2.0 using the toggle in the top right corner:
 2. Receive a detailed step-by-step solution
 3. View generated UI elements (v2.0) or formatted mathematical expressions
 
-## Roadmap
-
-Future development plans include:
-- steps generation
-- Follow-up questions capability
-  - highlight to follow-up
-- Choose to use r1 or not
-- Add templated generated UI elements at the end?
-- Change to iframe instead of dangerouslySetInnerHTML
-- desktop notifications
-
-- PDF and multiple file upload support
-- Enhanced observability and monitoring and better logging
-- Multi-step reasoning for UI generation to generate more complex UI elements
-- Add authentication, sessions, and persist solutions
-
 
 ## Requirements
 - Node.js (version 16 or higher)
