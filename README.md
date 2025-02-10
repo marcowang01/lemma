@@ -1,4 +1,4 @@
-# Math Helper
+# Lemma
 
 A web application that provides step-by-step solutions to mathematical problems through text or image input.
 
@@ -34,23 +34,14 @@ A web application that provides step-by-step solutions to mathematical problems 
 
 ## Features
 
-### Version Toggle
-Switch between v1.0 and v2.0 using the toggle in the top right corner:
-- V1.0: Better reasoning capability and improved latency (recommended for stable use)
-- V2.0: Interactive UI elements and chart generation capabilities (experimental, may be unstable)
-
 
 ### Current Features
 - Text input for math questions
 - Image input support (upload photos of math problems)
-- Generation of interactive UI elements (v2.0)
+- Generation of interactive UI elements
 - LaTeX rendering for mathematical expressions
-
-### Known Limitations
-- v2.0 takes ~20-25 seconds to generate a solution
-- graphs will take an additional 10-15 seconds to render
-- latex rendering is not stable and may not render correctly
-- LLM struggle with correct syntax and using libraries and imports correctly
+- Use reasoning models for complex problems
+- Use wolfram alpha to verify computations
 
 ### How to Use
 1. Submit your math question through:
@@ -59,11 +50,5 @@ Switch between v1.0 and v2.0 using the toggle in the top right corner:
 2. Receive a detailed step-by-step solution
 3. View generated UI elements (v2.0) or formatted mathematical expressions
 
-
-## Requirements
-- Node.js (version 16 or higher)
-- npm (Node Package Manager)
-- Anthropic API key
-- Wolfram App ID
 
 ![Math Helper Interface](/assets/solution.png)
