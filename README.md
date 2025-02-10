@@ -2,7 +2,7 @@
 
 A web application that provides step-by-step solutions to mathematical problems through text or image input.
 
-![Math Helper Interface](/assets/screenshot.png)
+![Math Helper Interface](/assets/homepage.png)
 
 ## Quick Start
 
@@ -65,3 +65,5 @@ Switch between v1.0 and v2.0 using the toggle in the top right corner:
 - npm (Node Package Manager)
 - Anthropic API key
 - Wolfram App ID
+
+![Math Helper Interface](/assets/solution.png)
