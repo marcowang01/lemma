@@ -8,7 +8,7 @@ import DOMPurify from "dompurify"
 import { marked } from "marked"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
-import { CollapsibleReasoning } from "../reasoning"
+import { ReasoningCard } from "../reasoning"
 import { ThinkingIndicator } from "../thinking"
 
 export default function Solution() {
@@ -25,13 +25,22 @@ export default function Solution() {
 <p>Therefore, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>2</mn></mrow>1 + 1 = 2</math></span><span aria-hidden="true" class="katex-html"><span class="base"><span style="height:0.7278em;vertical-align:-0.0833em;" class="strut"></span><span class="mord">1</span><span style="margin-right:0.2222em;" class="mspace"></span><span class="mbin">+</span><span style="margin-right:0.2222em;" class="mspace"></span></span><span class="base"><span style="height:0.6444em;" class="strut"></span><span class="mord">1</span><span style="margin-right:0.2778em;" class="mspace"></span><span class="mrel">=</span><span style="margin-right:0.2778em;" class="mspace"></span></span><span class="base"><span style="height:0.6444em;" class="strut"></span><span class="mord">2</span></span></span></span></p>
 <p>This is one of the most fundamental equations in mathematics that we learn early on. It forms the basis for more complex addition problems and is used throughout mathematics.</p>
 `)
-  const [reasoningText, setReasoningText] = useState("")
+  const [reasoningText, setReasoningText] = useState(`
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+    `)
   const [isThinking, setIsThinking] = useState(false)
+  const [scratchpadText, setScratchpadText] = useState("Let me solve this problem step by step...")
   const stepIdx = useRef(0)
 
   useEffect(() => {
     if (!formData) {
-      router.push("/")
+      // router.push("/")
       return
     }
 
@@ -100,19 +109,20 @@ export default function Solution() {
 
   return (
     <main className="flex h-full w-full items-center justify-center">
-      <div className="grid gap-8 md:grid-cols-1">
-        {reasoningText && <CollapsibleReasoning text={reasoningText} />}
+      <div className="flex w-full flex-col gap-5">
+        <p className="text-dark-dark-gray text-2xl font-light italic">{scratchpadText}</p>
+        {isThinking && (
+          <div className="my-2 px-4">
+            <ThinkingIndicator />
+          </div>
+        )}
+        {reasoningText && <ReasoningCard text={reasoningText} />}
         {solutionText && (
           <Card className="h-full w-full" badgeText="Solution" variant="secondary">
             <div
               className="markdown mb-auto h-full w-full"
               dangerouslySetInnerHTML={{ __html: solutionText }}
             />
-            {isThinking && (
-              <div className="my-2 px-4">
-                <ThinkingIndicator />
-              </div>
-            )}
           </Card>
         )}
       </div>

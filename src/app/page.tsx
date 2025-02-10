@@ -38,7 +38,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="flex-col items-center justify-center px-4 py-8">
+    <main className="flex-col items-center justify-center">
       <h1 className="font-appleGaramond flex flex-col items-center text-9xl font-light italic tracking-tight">
         lemma
       </h1>
