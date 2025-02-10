@@ -4,6 +4,8 @@ import { useFormContext } from "@/app/context/form-context"
 import { Card } from "@/components/core/card"
 import { renderLatex } from "@/lib/latex"
 import { ServerMessage } from "@/lib/types"
+import { EditIcon } from "@/svg/editIcon"
+import { PauseIcon } from "@/svg/pauseIcon"
 import DOMPurify from "dompurify"
 import { marked } from "marked"
 import { useRouter } from "next/navigation"
@@ -109,6 +111,19 @@ export default function Solution() {
 
   return (
     <main className="flex h-full w-full items-center justify-center">
+      <div className="text-light-black bg-light-gray fixed right-4 top-4 flex items-center gap-6 rounded-xl px-6 py-4 text-2xl font-light italic">
+        <span className="inline-block max-w-[400px] truncate italic">
+          {String(formData?.get("userInput") ?? "Unknown question")}
+        </span>
+        <EditIcon
+          className="hover:fill-dark-gray cursor-pointer transition-all duration-300 ease-in-out"
+          height={24}
+        />
+        <PauseIcon
+          className="hover:fill-dark-gray cursor-pointer transition-all duration-300 ease-in-out"
+          height={21}
+        />
+      </div>
       <div className="flex w-full flex-col gap-5">
         <p className="text-dark-dark-gray text-2xl font-light italic">{scratchpadText}</p>
         {isThinking && (
