@@ -90,7 +90,7 @@ export default function Chat() {
       <h1 className="font-appleGaramond flex flex-col items-center text-9xl font-light italic tracking-tight">
         lemma
       </h1>
-      <div className="mb-48 mt-24 h-80 w-full rounded-xl border border-black bg-gray-100 opacity-50">
+      <div className="mb-48 mt-24 h-80 w-full rounded-xl border border-black bg-gray-100 bg-opacity-50">
         <InputForm onSubmit={handleSubmit} disabled={isThinking} />
       </div>
       <div className="grid gap-8 md:grid-cols-1">
