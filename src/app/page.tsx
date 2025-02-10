@@ -1,19 +1,29 @@
 "use client"
 
+import { Badge } from "@/components/core/badge"
 import { InputForm } from "@/components/core/input-form"
 import { Card, CardContent } from "@/components/ui/card"
 import { renderLatex } from "@/lib/latex"
 import { ServerMessage } from "@/lib/types"
+import { cn } from "@/lib/utils"
 import DOMPurify from "dompurify"
 import { marked } from "marked"
 import { useEffect, useRef, useState } from "react"
 import { CollapsibleReasoning } from "./reasoning"
 import { ThinkingIndicator } from "./thinking"
 
+export enum QuestionType {
+  HOMEWORK_HELP = "homework help",
+  EXAM_PREP = "exam prep",
+  QUICK_ANSWERS = "quick answers",
+  LEARN_NEW_CONCEPTS = "learn new concepts",
+}
+
 export default function Chat() {
   const [solutionText, setSolutionText] = useState<string>("")
   const [reasoningText, setReasoningText] = useState<string>(``)
   const [isThinking, setIsThinking] = useState<boolean>(false)
+  const [questionType, setQuestionType] = useState<QuestionType>(QuestionType.HOMEWORK_HELP)
   const stepIdx = useRef(0)
 
   useEffect(() => {
@@ -85,12 +95,32 @@ export default function Chat() {
     setIsThinking(false)
   }
 
+  const handleQuestionTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuestionType(e.target.value as QuestionType)
+  }
+
   return (
     <main className="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center justify-center px-4 py-8">
       <h1 className="font-appleGaramond flex flex-col items-center text-9xl font-light italic tracking-tight">
         lemma
       </h1>
-      <div className="mb-48 mt-24 w-full rounded-xl border border-black bg-gray-100 bg-opacity-50">
+      <div className="mt-24 w-full">
+        <div className="flex items-center justify-start gap-4">
+          {Object.values(QuestionType).map((type) => (
+            <Badge
+              key={`${type}-badge`}
+              className={cn(
+                "cursor-pointer select-none hover:opacity-80",
+                questionType !== type && "border-dark-gray bg-transparent"
+              )}
+              onClick={() => setQuestionType(type)}
+            >
+              {type}
+            </Badge>
+          ))}
+        </div>
+      </div>
+      <div className="mb-48 mt-4 w-full rounded-xl border border-black bg-gray-100 bg-opacity-50">
         <InputForm onSubmit={handleSubmit} disabled={isThinking} />
       </div>
       <div className="grid gap-8 md:grid-cols-1">
