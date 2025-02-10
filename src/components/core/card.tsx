@@ -27,7 +27,7 @@ const Card = ({
   return (
     <div
       className={cn(
-        "bg-light-gray/50 flex flex-col gap-2 rounded-[20px] border border-black",
+        "bg-light-gray/50 flex flex-col gap-2 overflow-hidden rounded-[20px] border border-black",
         isCollapsed && "bg-neutral/30 border-neutral",
         className
       )}
