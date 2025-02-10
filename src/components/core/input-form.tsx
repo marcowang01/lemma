@@ -121,6 +121,9 @@ export function InputForm({
       ref={formRef}
       onSubmit={handleSubmit}
       onPaste={handlePaste}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
       className="flex h-full w-full flex-col gap-4"
     >
       {/* <div
@@ -140,6 +143,16 @@ export function InputForm({
           />
         </div>
       </div> */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        name="imageInput"
+        accept="image/*"
+        onChange={handleImageChange}
+        className="hidden"
+        id="photo-upload"
+        disabled={disabled}
+      />
       <div className="flex h-full w-full flex-col items-end justify-between gap-2 rounded-xl bg-transparent p-4">
         <textarea
           ref={textareaRef}
@@ -177,9 +190,12 @@ export function InputForm({
           disabled={disabled}
         />
         <div className="flex w-full items-center justify-between">
-          <div className="ml-4 text-gray-500">
+          <label
+            className="ml-4 cursor-pointer text-gray-500 transition-colors duration-200 hover:text-gray-700"
+            htmlFor="photo-upload"
+          >
             <UploadIcon width={22} height={22} />
-          </div>
+          </label>
           <button
             type="submit"
             className="h-fit rounded-lg text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"

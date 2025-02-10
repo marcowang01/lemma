@@ -36,6 +36,7 @@ export default {
           100: "#EFEFEF",
           300: "#D7D1C5",
           500: "#A2A2A2",
+          700: "#555555",
         },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
