@@ -1,6 +1,7 @@
 # Lemma
 
-A web application that provides step-by-step solutions to mathematical problems through text or image input.
+A web app that provides step-by-step solutions to math problems through text or image input. This project is under active development.
+
 
 ![Math Helper Interface](/assets/homepage.png)
 
