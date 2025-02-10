@@ -1,4 +1,4 @@
-# Lemma
+# Lemma (WIP)
 
 A web app that provides step-by-step solutions to math problems through text or image input. This project is under active development.
 
