@@ -1,11 +1,12 @@
 "use client"
 
 import { Badge } from "@/components/core/badge"
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { SendIcon } from "@/svg/sendIcon"
 import { UploadIcon } from "@/svg/uploadIcon"
 import { X } from "lucide-react"
+import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 
 export function InputForm({
@@ -210,12 +211,29 @@ export function InputForm({
           disabled={disabled}
         />
         <div className="flex w-full items-center justify-between">
-          <label
-            className="text-dark-gray hover:text-dark-dark-gray ml-4 cursor-pointer transition-colors duration-200"
-            htmlFor="photo-upload"
-          >
-            <UploadIcon width={22} height={22} />
-          </label>
+          <div className="flex items-center gap-2">
+            <label
+              className={cn(
+                "text-dark-gray hover:text-dark-dark-gray ml-4 cursor-pointer transition-colors duration-200",
+                imageUrl && "hidden"
+              )}
+              htmlFor="photo-upload"
+            >
+              <UploadIcon width={22} height={22} />
+            </label>
+            {imageUrl && (
+              <Image
+                src={imageUrl}
+                alt="Math problem"
+                objectFit="cover"
+                className="aspect-square cursor-pointer rounded-lg transition-opacity duration-200 hover:opacity-80"
+                onClick={() => setIsModalOpen(true)}
+                width={50}
+                height={50}
+              />
+            )}
+          </div>
+
           <div className="flex items-center justify-end gap-6">
             <label htmlFor="reasoning-enabled">
               <Badge
@@ -241,22 +259,23 @@ export function InputForm({
         </div>
       </div>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="w-fit max-w-6xl">
-          <DialogTitle>Uploaded Image</DialogTitle>
-          <button
-            onClick={() => setIsModalOpen(false)}
-            className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-          >
-            <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-          </button>
-          <div className="mt-2 w-full">
-            <img
+        <DialogContent className="bg-natural m-0 max-w-[50%] border-0 px-4 pb-4 pt-12 outline-none">
+          <div hidden>
+            <DialogTitle>Uploaded Image</DialogTitle>
+          </div>
+          <div className="h-full w-full">
+            <Image
               src={imageUrl ?? ""}
               alt="Math problem enlarged"
-              className="max-h-[80vh] w-auto rounded-md object-contain"
+              className="h-auto w-[80vh] rounded-md object-contain"
+              width={1000}
+              height={1000}
             />
           </div>
+          <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 outline-none transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 disabled:pointer-events-none">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
         </DialogContent>
       </Dialog>
     </form>
