@@ -1,18 +1,31 @@
 import { Badge } from "@/components/core/badge"
 import { cn } from "@/lib/utils"
+import { cva, type VariantProps } from "class-variance-authority"
 import React, { useEffect, useRef, useState } from "react"
 
-const Card = ({
-  children,
-  className = "",
-  badgeText,
-  ...props
-}: {
+const cardVariants = cva(
+  "flex flex-col gap-2 overflow-hidden rounded-[20px] border transition-all duration-300 ease-in-out",
+  {
+    variants: {
+      variant: {
+        primary: "bg-light-gray/50 border-black",
+        secondary: "bg-neutral/30 border-neutral",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+    },
+  }
+)
+
+interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {
   children: React.ReactNode
-  className?: string
   badgeText?: string
-  props?: any
-}) => {
+}
+
+const Card = ({ children, className, variant, badgeText, ...props }: CardProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [contentHeight, setContentHeight] = useState("auto")
   const contentRef = useRef<HTMLDivElement>(null)
@@ -26,10 +39,7 @@ const Card = ({
 
   return (
     <div
-      className={cn(
-        "bg-light-gray/50 flex flex-col gap-2 overflow-hidden rounded-[20px] border border-black",
-        className
-      )}
+      className={cn(cardVariants({ variant, className }))}
       style={{
         height: isCollapsed ? "50px" : contentHeight,
         transition:
@@ -42,10 +52,10 @@ const Card = ({
         <div className="cursor-pointer p-2.5" onClick={() => setIsCollapsed(!isCollapsed)}>
           <Badge
             className={cn(
-              "text-md transition-colors duration-300 ease-in-out",
+              "text-md transition-all duration-300 ease-in-out",
               isCollapsed
                 ? "border-neutral bg-neutral hover:bg-primary-yellow hover:border-primary-yellow"
-                : "hover:bg-secondary-yellow hover:border-secondary-yellow"
+                : "hover:opacity-80"
             )}
           >
             {badgeText}
@@ -53,7 +63,9 @@ const Card = ({
         </div>
       )}
       <div
-        className={`p-6 pt-2 transition-opacity duration-300 ease-in-out ${isCollapsed ? "opacity-0" : "opacity-100"} `}
+        className={`p-6 pt-2 transition-opacity duration-300 ease-in-out ${
+          isCollapsed ? "opacity-0" : "opacity-100"
+        }`}
       >
         {children}
       </div>
@@ -61,4 +73,4 @@ const Card = ({
   )
 }
 
-export default Card
+export { Card, cardVariants, type CardProps }

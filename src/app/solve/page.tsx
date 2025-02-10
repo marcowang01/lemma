@@ -1,7 +1,7 @@
 "use client"
 
 import { useFormContext } from "@/app/context/form-context"
-import Card from "@/components/core/card"
+import { Card } from "@/components/core/card"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { CollapsibleReasoning } from "../reasoning"
@@ -34,7 +34,7 @@ export default function Solution() {
       <div className="grid gap-8 md:grid-cols-1">
         {reasoningText && <CollapsibleReasoning text={reasoningText} />}
         {solutionText && (
-          <Card className="h-full w-full" badgeText="Solution">
+          <Card className="h-full w-full" badgeText="Solution" variant="secondary">
             <div
               className="markdown mb-auto h-full w-full"
               dangerouslySetInnerHTML={{ __html: solutionText }}
