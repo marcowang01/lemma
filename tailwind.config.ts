@@ -34,7 +34,7 @@ export default {
       colors: {
         "light-black": "#1E1E1E",
         "light-gray": "#EFEFEF",
-        natural: "#D7D1C5",
+        neutral: "#D7D1C5",
         "dark-gray": "#A2A2A2",
         "dark-dark-gray": "#555555",
         "primary-yellow": "#FFD700",

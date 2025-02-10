@@ -1,10 +1,7 @@
 "use client"
 
 import { useFormContext } from "@/app/context/form-context"
-import { renderLatex } from "@/lib/latex"
-import { ServerMessage } from "@/lib/types"
-import DOMPurify from "dompurify"
-import { marked } from "marked"
+import Card from "@/components/core/card"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { CollapsibleReasoning } from "../reasoning"
@@ -29,98 +26,26 @@ export default function Solution() {
   const stepIdx = useRef(0)
 
   useEffect(() => {
-
     return
-    
-    if (!formData) {
-      router.push("/")
-      return
-    }
-
-    const fetchSolution = async () => {
-      setSolutionText("")
-      setReasoningText("")
-      setIsThinking(true)
-
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        body: formData,
-      })
-
-      if (!response.ok) {
-        console.error("Failed to fetch response", response)
-        setSolutionText("Failed to fetch response")
-        return
-      }
-
-      const reader = response.body!.getReader()
-      const decoder = new TextDecoder()
-      let text = ""
-      let reasoningText = ""
-
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-
-        const rawResponse = decoder.decode(value, { stream: true })
-        const lines = rawResponse.split("\n")
-
-        for (const line of lines) {
-          if (line.trim() === "") continue
-
-          const serverMessage: ServerMessage = JSON.parse(line)
-
-          switch (serverMessage.type) {
-            case "response":
-              if (stepIdx.current !== serverMessage.stepIdx) {
-                text = ""
-                stepIdx.current = serverMessage.stepIdx
-              }
-
-              text += serverMessage.content
-              const processedText = renderLatex(text)
-              const markdownHtml = marked.parse(processedText) as string
-              const safeHtml = DOMPurify.sanitize(markdownHtml)
-              setSolutionText(safeHtml)
-              console.log(safeHtml)
-              break
-            case "reasoning":
-              reasoningText += serverMessage.content
-              setReasoningText(reasoningText)
-              console.log(reasoningText)
-              break
-            case "error":
-              console.error("Error message:", serverMessage.content)
-              break
-          }
-        }
-      }
-      setIsThinking(false)
-    }
-    fetchSolution()
   }, [formData, router])
 
   return (
-    <main className="flex h-screen w-screen items-center justify-center">
-      <div className="text-center">
-        <div className="grid gap-8 md:grid-cols-1">
-          {reasoningText && <CollapsibleReasoning text={reasoningText} />}
-          {solutionText && (
-            <div className="overflow-hidden">
-              <div className="relative flex h-full flex-col px-0 py-2">
-                <div
-                  className="markdown mb-auto h-full w-full"
-                  dangerouslySetInnerHTML={{ __html: solutionText }}
-                />
-                {isThinking && (
-                  <div className="my-2 px-4">
-                    <ThinkingIndicator />
-                  </div>
-                )}
+    <main className="flex h-full w-full items-center justify-center">
+      <div className="grid gap-8 md:grid-cols-1">
+        {reasoningText && <CollapsibleReasoning text={reasoningText} />}
+        {solutionText && (
+          <Card className="h-full w-full" badgeText="Solution">
+            <div
+              className="markdown mb-auto h-full w-full"
+              dangerouslySetInnerHTML={{ __html: solutionText }}
+            />
+            {isThinking && (
+              <div className="my-2 px-4">
+                <ThinkingIndicator />
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </Card>
+        )}
       </div>
     </main>
   )

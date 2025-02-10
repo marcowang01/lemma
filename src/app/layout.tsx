@@ -37,7 +37,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${roboto.variable} ${AppleGaramond.variable}`}>
         <FormProvider>
-          <div className="cream-radial-gradient h-screen w-screen">{children}</div>
+          <div className="cream-radial-gradient h-screen w-screen">
+            <div className="mx-auto flex h-full w-full max-w-[1050px]">{children}</div>
+          </div>
         </FormProvider>
       </body>
     </html>

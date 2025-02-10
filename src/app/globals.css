@@ -74,7 +74,7 @@
 }
 
 .markdown {
-  @apply px-4 py-2; /* Add general padding to the markdown container */
+  @apply font-sans font-light text-2xl;
 }
 
 .markdown h1 {

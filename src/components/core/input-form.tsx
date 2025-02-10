@@ -198,7 +198,7 @@ export function InputForm({
           className={cn(
             cn(
               "h-full w-full grow resize-none rounded bg-transparent p-2",
-              "placeholder:text-natural font-sans text-2xl font-light",
+              "placeholder:text-neutral font-sans text-2xl font-light",
               "ring-offset-background",
               "placeholder:italic",
               "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
@@ -267,7 +267,7 @@ export function InputForm({
         </div>
       </div>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-natural m-0 max-w-[70%] border-0 p-0 outline-none">
+        <DialogContent className="bg-neutral m-0 max-w-[70%] border-0 p-0 outline-none">
           <div hidden>
             <DialogTitle>Uploaded Image</DialogTitle>
           </div>
