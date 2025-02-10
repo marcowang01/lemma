@@ -18,7 +18,6 @@ export function InputForm({
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [userInput, setUserInput] = useState<string>("")
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
   const [reasoningEnabled, setReasoningEnabled] = useState(false)
   const [height, setHeight] = useState("20rem")
 
@@ -92,19 +91,8 @@ export function InputForm({
     }
   }
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-  }
-
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
-    setIsDragging(false)
 
     if (disabled) return
 
@@ -142,8 +130,6 @@ export function InputForm({
       ref={formRef}
       onSubmit={handleSubmit}
       onPaste={handlePaste}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={cn("flex w-full flex-col gap-4 transition-all duration-300")}
       style={{
@@ -186,7 +172,7 @@ export function InputForm({
               <button
                 type="button"
                 onClick={handleClearImage}
-                className="bg-primary-yellow absolute -right-2 -top-2 rounded-full p-1 text-black shadow-sm hover:opacity-70"
+                className="absolute -right-2 -top-2 rounded-full bg-primary-yellow p-1 text-black shadow-sm hover:opacity-70"
               >
                 <XIcon className="h-3 w-3" />
               </button>
@@ -198,7 +184,7 @@ export function InputForm({
           className={cn(
             cn(
               "h-full w-full grow resize-none rounded bg-transparent p-2",
-              "placeholder:text-neutral font-sans text-2xl font-light",
+              "font-sans text-2xl font-light placeholder:text-neutral",
               "ring-offset-background",
               "placeholder:italic",
               "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
@@ -235,7 +221,7 @@ export function InputForm({
         >
           <label
             className={cn(
-              "text-dark-gray hover:text-dark-dark-gray ml-4 cursor-pointer transition-colors duration-200",
+              "ml-4 cursor-pointer text-dark-gray transition-colors duration-200 hover:text-dark-dark-gray",
               imageUrl && "hidden"
             )}
             htmlFor="photo-upload"
@@ -267,7 +253,7 @@ export function InputForm({
         </div>
       </div>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-neutral m-0 max-w-[70%] border-0 p-0 outline-none">
+        <DialogContent className="m-0 max-w-[70%] border-0 bg-neutral p-0 outline-none">
           <div hidden>
             <DialogTitle>Uploaded Image</DialogTitle>
           </div>
