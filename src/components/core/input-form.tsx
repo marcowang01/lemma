@@ -136,7 +136,7 @@ export function InputForm({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className="flex h-full w-full flex-col gap-4"
+      className={cn("flex w-full flex-col gap-4", imageUrl ? "h-120" : "h-80")}
     >
       {/* <div
         className={`overflow-hidden ${isDragging ? "ring-2 ring-primary" : ""}`}
@@ -175,6 +175,28 @@ export function InputForm({
         ref={reasoningCheckboxRef}
       />
       <div className="flex h-full w-full flex-col items-end justify-between gap-2 rounded-xl bg-transparent p-4">
+        {imageUrl && (
+          <div className="w-full">
+            <div className="relative w-fit">
+              <Image
+                src={imageUrl}
+                alt="Math problem"
+                objectFit="fit"
+                className="h-40 w-auto cursor-pointer rounded-lg transition-opacity duration-200 hover:opacity-80"
+                onClick={() => setIsModalOpen(true)}
+                width={50}
+                height={50}
+              />
+              <button
+                type="button"
+                onClick={handleClearImage}
+                className="bg-primary-yellow absolute -right-2 -top-2 rounded-full p-1 text-black shadow-sm hover:opacity-70"
+              >
+                <XIcon className="h-3 w-3" />
+              </button>
+            </div>
+          </div>
+        )}
         <textarea
           ref={textareaRef}
           className={cn(
@@ -211,37 +233,15 @@ export function InputForm({
           disabled={disabled}
         />
         <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-2">
-            <label
-              className={cn(
-                "text-dark-gray hover:text-dark-dark-gray ml-4 cursor-pointer transition-colors duration-200",
-                imageUrl && "hidden"
-              )}
-              htmlFor="photo-upload"
-            >
-              <UploadIcon width={22} height={22} />
-            </label>
-            {imageUrl && (
-              <div className="relative">
-                <Image
-                  src={imageUrl}
-                  alt="Math problem"
-                  objectFit="cover"
-                  className="aspect-square cursor-pointer rounded-lg transition-opacity duration-200 hover:opacity-80"
-                  onClick={() => setIsModalOpen(true)}
-                  width={50}
-                  height={50}
-                />
-                <button
-                  type="button"
-                  onClick={handleClearImage}
-                  className="bg-primary-yellow absolute -right-2 -top-2 rounded-full p-1 text-black shadow-sm hover:opacity-70"
-                >
-                  <XIcon className="h-3 w-3" />
-                </button>
-              </div>
+          <label
+            className={cn(
+              "text-dark-gray hover:text-dark-dark-gray ml-4 cursor-pointer transition-colors duration-200",
+              imageUrl && "hidden"
             )}
-          </div>
+            htmlFor="photo-upload"
+          >
+            <UploadIcon width={22} height={22} />
+          </label>
 
           <div className="flex items-center justify-end gap-6">
             <label htmlFor="reasoning-enabled">
