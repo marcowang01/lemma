@@ -9,7 +9,7 @@ import { EditIcon } from "@/svg/editIcon"
 import { PauseIcon } from "@/svg/pauseIcon"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ReasoningCard } from "../reasoning"
 import { ThinkingIndicator } from "../thinking"
 
@@ -23,6 +23,7 @@ export default function Solution() {
   const [isThinking, setIsThinking] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const stepIdx = useRef(0)
 
   useEffect(() => {
     if (!formData) {
@@ -71,6 +72,10 @@ export default function Solution() {
 
           switch (serverMessage.type) {
             case "response":
+              if (stepIdx.current !== serverMessage.stepIdx) {
+                text = ""
+                stepIdx.current = serverMessage.stepIdx
+              }
               text += serverMessage.content
 
               // console.log(`text: ${text}`)
