@@ -32,12 +32,13 @@ export default {
         tight: "-0.02em",
       },
       colors: {
-        gray: {
-          100: "#EFEFEF",
-          300: "#D7D1C5",
-          500: "#A2A2A2",
-          700: "#555555",
-        },
+        "light-black": "#1E1E1E",
+        "light-gray": "#EFEFEF",
+        natural: "#D7D1C5",
+        "dark-gray": "#A2A2A2",
+        "dark-dark-gray": "#555555",
+        "primary-yellow": "#FFD700",
+        "secondary-yellow": "#FFEE8F",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

@@ -1,9 +1,11 @@
 "use client"
 
+import { Badge } from "@/components/core/badge"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { SendIcon } from "@/svg/sendIcon"
-import { UploadIcon, X } from "lucide-react"
+import { UploadIcon } from "@/svg/uploadIcon"
+import { X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 export function InputForm({
@@ -159,7 +161,7 @@ export function InputForm({
           className={cn(
             cn(
               "w-full resize-none rounded bg-transparent p-2",
-              "font-sans text-2xl font-light placeholder:text-gray-300",
+              "placeholder:text-natural font-sans text-2xl font-light",
               "ring-offset-background",
               "placeholder:italic",
               "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
@@ -191,18 +193,21 @@ export function InputForm({
         />
         <div className="flex w-full items-center justify-between">
           <label
-            className="ml-4 cursor-pointer text-gray-500 transition-colors duration-200 hover:text-gray-700"
+            className="text-dark-gray hover:text-dark-dark-gray ml-4 cursor-pointer transition-colors duration-200"
             htmlFor="photo-upload"
           >
             <UploadIcon width={22} height={22} />
           </label>
-          <button
-            type="submit"
-            className="h-fit rounded-lg text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={(!userInput && !imageUrl) || disabled}
-          >
-            <SendIcon width={50} height={50} />
-          </button>
+          <div className="flex items-center justify-end gap-6">
+            <Badge>Reasoning</Badge>
+            <button
+              type="submit"
+              className="h-fit rounded-lg text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={(!userInput && !imageUrl) || disabled}
+            >
+              <SendIcon width={50} height={50} />
+            </button>
+          </div>
         </div>
       </div>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
