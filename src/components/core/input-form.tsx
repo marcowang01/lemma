@@ -2,6 +2,7 @@
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
+import { SendIcon } from "@/svg/sendIcon"
 import { X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
@@ -157,7 +158,7 @@ export function InputForm({
           )}
           name="userInput"
           value={userInput}
-          placeholder="Type, paste, or drag and drop your math problem here..."
+          placeholder="Type, paste, upload, or drag and drop your math problem here..."
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -178,10 +179,10 @@ export function InputForm({
         <div className="flex justify-end">
           <button
             type="submit"
-            className="h-fit rounded-lg bg-primary px-4 py-2 text-white transition-colors duration-200 hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-fit rounded-lg text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={(!userInput && !imageUrl) || disabled}
           >
-            Submit
+            <SendIcon className="h-12 w-12" />
           </button>
         </div>
       </div>
