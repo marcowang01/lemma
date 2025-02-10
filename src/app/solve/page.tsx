@@ -2,12 +2,14 @@
 
 import { useFormContext } from "@/app/context/form-context"
 import { Card } from "@/components/core/card"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { renderLatex } from "@/lib/latex"
 import { ServerMessage } from "@/lib/types"
 import { EditIcon } from "@/svg/editIcon"
 import { PauseIcon } from "@/svg/pauseIcon"
 import DOMPurify from "dompurify"
 import { marked } from "marked"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { ReasoningCard } from "../reasoning"
@@ -18,8 +20,12 @@ export default function Solution() {
   const router = useRouter()
   const [solutionText, setSolutionText] = useState("")
   const [reasoningText, setReasoningText] = useState("")
-  const [isThinking, setIsThinking] = useState(false)
   const [scratchpadText, setScratchpadText] = useState("Let me solve this problem step by step...")
+
+  const [isThinking, setIsThinking] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+
   const stepIdx = useRef(0)
 
   useEffect(() => {
@@ -27,6 +33,10 @@ export default function Solution() {
       router.push("/")
       return
     }
+
+    const imageFile = formData.get("imageInput") as File
+    const imageUrl = URL.createObjectURL(imageFile)
+    setImageUrl(imageUrl)
 
     const fetchSolution = async () => {
       setSolutionText("")
@@ -94,6 +104,17 @@ export default function Solution() {
   return (
     <main className="flex h-full w-full items-center justify-center">
       <div className="text-light-black bg-light-gray fixed right-4 top-4 flex items-center gap-6 rounded-xl px-6 py-4 text-2xl font-light italic">
+        {imageUrl && (
+          <Image
+            src={imageUrl}
+            alt="Math problem"
+            objectFit="fit"
+            className="h-16 w-auto cursor-pointer rounded-lg transition-opacity duration-200 hover:opacity-80"
+            width={50}
+            height={50}
+            onClick={() => setIsModalOpen(true)}
+          />
+        )}
         <span className="inline-block max-w-[400px] truncate italic">
           {String(formData?.get("userInput") ?? "Unknown question")}
         </span>
@@ -119,6 +140,22 @@ export default function Solution() {
           </Card>
         )}
       </div>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="bg-neutral m-0 max-w-[70%] border-0 p-0 outline-none">
+          <div hidden>
+            <DialogTitle>Uploaded Image</DialogTitle>
+          </div>
+          <div className="h-full w-full">
+            <Image
+              src={imageUrl ?? ""}
+              alt="Math problem enlarged"
+              className="h-auto w-full rounded-md object-contain"
+              width={1000}
+              height={1000}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   )
 }

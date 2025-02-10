@@ -275,7 +275,7 @@ export function InputForm({
             <Image
               src={imageUrl ?? ""}
               alt="Math problem enlarged"
-              className="h-auto w-[80vh] rounded-md object-contain"
+              className="h-auto w-full rounded-md object-contain"
               width={1000}
               height={1000}
             />
