@@ -19,7 +19,7 @@ export default function Chat() {
   useEffect(() => {
     marked.setOptions({
       gfm: true,
-      breaks: true,
+    breaks: true,
     })
   }, [])
 

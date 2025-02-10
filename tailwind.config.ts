@@ -18,12 +18,15 @@ export default {
         appleGaramond: ["var(--font-apple-garamond)"],
       },
       fontWeight: {
-        thin: "200",
+        thin: "100",
+        extraLight: "200",
         light: "300",
         normal: "400",
         medium: "500",
         semibold: "600",
         bold: "700",
+        extraBold: "800",
+        black: "900",
       },
       letterSpacing: {
         tight: "-0.02em",
@@ -31,6 +34,7 @@ export default {
       colors: {
         gray: {
           100: "#EFEFEF",
+          300: "#D7D1C5",
         },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

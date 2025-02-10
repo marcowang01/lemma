@@ -143,10 +143,17 @@ export function InputForm({
         <textarea
           ref={textareaRef}
           className={cn(
-            "w-full resize-none rounded bg-transparent p-2 text-2xl ring-offset-background placeholder:font-light placeholder:italic focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:bg-transparent",
-            {
-              "opacity-50": disabled,
-            }
+            cn(
+              "w-full resize-none rounded bg-transparent p-2",
+              "font-sans text-2xl font-light placeholder:text-gray-300",
+              "ring-offset-background",
+              "placeholder:italic",
+              "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+              "disabled:cursor-not-allowed disabled:bg-transparent",
+              {
+                "opacity-50": disabled,
+              }
+            )
           )}
           name="userInput"
           value={userInput}
