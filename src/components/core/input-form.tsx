@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { SendIcon } from "@/svg/sendIcon"
-import { X } from "lucide-react"
+import { UploadIcon, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 export function InputForm({
@@ -176,13 +176,16 @@ export function InputForm({
           }}
           disabled={disabled}
         />
-        <div className="flex justify-end">
+        <div className="flex w-full items-center justify-between">
+          <div className="ml-4 text-gray-500">
+            <UploadIcon width={22} height={22} />
+          </div>
           <button
             type="submit"
             className="h-fit rounded-lg text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={(!userInput && !imageUrl) || disabled}
           >
-            <SendIcon className="h-12 w-12" />
+            <SendIcon width={50} height={50} />
           </button>
         </div>
       </div>
