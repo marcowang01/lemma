@@ -13,6 +13,21 @@ export default {
         "cream-gradient":
           "radial-gradient(circle at center, #FEF6CC 0%, #EAE8DD 69%, #F5F5F5 100%)",
       },
+      fontFamily: {
+        sans: ["var(--font-roboto)"],
+        appleGaramond: ["var(--font-apple-garamond)"],
+      },
+      fontWeight: {
+        thin: "200",
+        light: "300",
+        normal: "400",
+        medium: "500",
+        semibold: "600",
+        bold: "700",
+      },
+      letterSpacing: {
+        tight: "-0.02em",
+      },
       colors: {
         gray: {
           100: "#EFEFEF",
