@@ -79,12 +79,15 @@ export default function Solution() {
               }
 
               text += serverMessage.content
+
+              // console.log(`text: ${text}`)
+
               updateContent(text)
               break
             case "reasoning":
               reasoningText += serverMessage.content
               setReasoningText(reasoningText)
-              console.log(reasoningText)
+              // console.log(reasoningText)
               break
             case "error":
               console.error("Error message:", serverMessage.content)
@@ -125,7 +128,7 @@ export default function Solution() {
           height={21}
         />
       </div>
-      <div className="flex w-full flex-col gap-5">
+      <div className="my-24 flex w-full flex-col gap-5">
         <p className="text-dark-dark-gray whitespace-pre-wrap text-2xl font-light italic">
           {scratchpad}
         </p>
@@ -162,24 +165,3 @@ function solutionCard(text: string, variant: "primary" | "secondary", badgeText:
     </Card>
   )
 }
-
-// function getSafeHtml(text: string) {
-//   const processedText = renderLatex(text)
-//   const markdownHtml = marked.parse(processedText) as string
-//   const safeHtml = DOMPurify.sanitize(markdownHtml)
-
-//   console.log(`text: ${text}`)
-//   console.log(`safeHtml: ${safeHtml}`)
-
-//   return safeHtml
-// }
-
-// function extractTextFromXml(text: string) {
-//   const xml = new DOMParser().parseFromString(text, "text/xml")
-//   const scratchpad = xml.querySelector("scratchpad")?.textContent
-//   const question = xml.querySelector("question")?.textContent
-//   const steps = xml.querySelector("steps")?.textContent
-//   const finalAnswer = xml.querySelector("final_answer")?.textContent
-
-//   return { scratchpad, question, steps, finalAnswer }
-// }

@@ -34,12 +34,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${roboto.variable} ${AppleGaramond.variable}`}>
+    <html lang="en" className="h-full">
+      <body className={`${roboto.variable} ${AppleGaramond.variable} h-full`}>
         <FormProvider>
-          <div className="cream-radial-gradient fixed inset-0" />
-          <div className="relative grid min-h-screen place-items-center">
-            <div className="container max-w-[1050px] px-4 py-8">{children}</div>
+          <div className="cream-radial-gradient fixed inset-0 h-full w-full" />
+          <div className="relative h-full overflow-auto">
+            <div className="grid min-h-full place-items-center">
+              <div className="container max-w-[1050px] px-4 py-8">{children}</div>
+            </div>
           </div>
         </FormProvider>
       </body>

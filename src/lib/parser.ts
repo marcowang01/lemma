@@ -10,10 +10,8 @@ interface ParsedContent {
   finalAnswer: string
 }
 
-interface TagTracker {
-  content: string
-  isOpen: boolean
-}
+// TODO: this is fucked and not very flexible
+// make a more flexible construct 
 
 const createTagTrackers = () => ({
   scratchpad: { content: "", isOpen: false },
@@ -91,7 +89,15 @@ export function useParsedContent() {
 
   const updateContent = (text: string) => {
     const parsedContent = parseStreamedContent(text)
-    setContent(parsedContent)
+
+    setContent((prev) => {
+      const scratchpad = parsedContent.scratchpad ? parsedContent.scratchpad : prev.scratchpad
+      const question = parsedContent.question ? parsedContent.question : prev.question
+      const steps = parsedContent.steps ? parsedContent.steps : prev.steps
+      const finalAnswer = parsedContent.finalAnswer ? parsedContent.finalAnswer : prev.finalAnswer
+
+      return { scratchpad, question, steps, finalAnswer }
+    })
   }
 
   return {
