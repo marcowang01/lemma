@@ -20,7 +20,6 @@ export default function HomePage() {
   const router = useRouter()
 
   const [questionType, setQuestionType] = useState<QuestionType | null>(null)
-  const stepIdx = useRef(0)
 
   useEffect(() => {
     marked.setOptions({
