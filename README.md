@@ -4,6 +4,28 @@ A web application that provides step-by-step solutions to mathematical problems 
 
 ![Math Helper Interface](/assets/homepage.png)
 
+## Features
+
+
+### Current Features
+- Text input for math questions
+- Image input support (upload photos of math problems)
+- Generation of interactive UI elements
+- LaTeX rendering for mathematical expressions
+- Use reasoning models for complex problems
+- Use wolfram alpha to verify computations
+
+### How to Use
+1. Submit your math question through:
+   - Text input
+   - Image upload
+2. Receive a detailed step-by-step solution
+3. View generated UI elements (v2.0) or formatted mathematical expressions
+
+
+![Math Helper Interface](/assets/solution.png)
+
+
 ## Quick Start
 
 1. Get required API keys:
@@ -31,24 +53,3 @@ A web application that provides step-by-step solutions to mathematical problems 
    ```bash
    npm run build
    ```
-
-## Features
-
-
-### Current Features
-- Text input for math questions
-- Image input support (upload photos of math problems)
-- Generation of interactive UI elements
-- LaTeX rendering for mathematical expressions
-- Use reasoning models for complex problems
-- Use wolfram alpha to verify computations
-
-### How to Use
-1. Submit your math question through:
-   - Text input
-   - Image upload
-2. Receive a detailed step-by-step solution
-3. View generated UI elements (v2.0) or formatted mathematical expressions
-
-
-![Math Helper Interface](/assets/solution.png)
