@@ -3,12 +3,10 @@
 import { useFormContext } from "@/app/context/form-context"
 import { Card } from "@/components/core/card"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
-import { renderLatex } from "@/lib/latex"
+import { processSafeHtml, useParsedContent } from "@/lib/parser"
 import { ServerMessage } from "@/lib/types"
 import { EditIcon } from "@/svg/editIcon"
 import { PauseIcon } from "@/svg/pauseIcon"
-import DOMPurify from "dompurify"
-import { marked } from "marked"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -18,9 +16,9 @@ import { ThinkingIndicator } from "../thinking"
 export default function Solution() {
   const { formData } = useFormContext()
   const router = useRouter()
-  const [solutionText, setSolutionText] = useState("")
+  const { content, updateContent } = useParsedContent()
+
   const [reasoningText, setReasoningText] = useState("")
-  const [scratchpadText, setScratchpadText] = useState("Let me solve this problem step by step...")
 
   const [isThinking, setIsThinking] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -35,12 +33,14 @@ export default function Solution() {
     }
 
     const imageFile = formData.get("imageInput") as File
-    const imageUrl = URL.createObjectURL(imageFile)
-    setImageUrl(imageUrl)
+    if (imageFile.size > 0) {
+      const imageUrl = URL.createObjectURL(imageFile)
+      setImageUrl(imageUrl)
+    }
 
     const fetchSolution = async () => {
-      setSolutionText("")
       setReasoningText("")
+      updateContent("")
       setIsThinking(true)
 
       const response = await fetch("/api/chat", {
@@ -50,7 +50,7 @@ export default function Solution() {
 
       if (!response.ok) {
         console.error("Failed to fetch response", response)
-        setSolutionText("Failed to fetch response")
+        setIsThinking(false)
         return
       }
 
@@ -79,11 +79,7 @@ export default function Solution() {
               }
 
               text += serverMessage.content
-              const processedText = renderLatex(text)
-              const markdownHtml = marked.parse(processedText) as string
-              const safeHtml = DOMPurify.sanitize(markdownHtml)
-              setSolutionText(safeHtml)
-              console.log(safeHtml)
+              updateContent(text)
               break
             case "reasoning":
               reasoningText += serverMessage.content
@@ -100,6 +96,8 @@ export default function Solution() {
     }
     fetchSolution()
   }, [formData, router])
+
+  const { scratchpad, question, steps, finalAnswer } = content
 
   return (
     <main className="flex h-full w-full items-center justify-center">
@@ -128,17 +126,14 @@ export default function Solution() {
         />
       </div>
       <div className="flex w-full flex-col gap-5">
-        <p className="text-dark-dark-gray text-2xl font-light italic">{scratchpadText}</p>
+        <p className="text-dark-dark-gray whitespace-pre-wrap text-2xl font-light italic">
+          {scratchpad}
+        </p>
         {isThinking && <ThinkingIndicator />}
         {reasoningText && <ReasoningCard text={reasoningText} />}
-        {solutionText && (
-          <Card className="h-full w-full" badgeText="Solution" variant="secondary">
-            <div
-              className="markdown mb-auto h-full w-full"
-              dangerouslySetInnerHTML={{ __html: solutionText }}
-            />
-          </Card>
-        )}
+        {question && solutionCard(processSafeHtml(question), "secondary", "Question")}
+        {steps && solutionCard(processSafeHtml(steps), "secondary", "Step-by-step Solution")}
+        {finalAnswer && solutionCard(processSafeHtml(finalAnswer), "primary", "Final Solution")}
       </div>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="bg-neutral m-0 max-w-[70%] border-0 p-0 outline-none">
@@ -159,3 +154,32 @@ export default function Solution() {
     </main>
   )
 }
+
+function solutionCard(text: string, variant: "primary" | "secondary", badgeText: string) {
+  return (
+    <Card className="h-full w-full" badgeText={badgeText} variant={variant}>
+      <div className="markdown mb-auto h-full w-full" dangerouslySetInnerHTML={{ __html: text }} />
+    </Card>
+  )
+}
+
+// function getSafeHtml(text: string) {
+//   const processedText = renderLatex(text)
+//   const markdownHtml = marked.parse(processedText) as string
+//   const safeHtml = DOMPurify.sanitize(markdownHtml)
+
+//   console.log(`text: ${text}`)
+//   console.log(`safeHtml: ${safeHtml}`)
+
+//   return safeHtml
+// }
+
+// function extractTextFromXml(text: string) {
+//   const xml = new DOMParser().parseFromString(text, "text/xml")
+//   const scratchpad = xml.querySelector("scratchpad")?.textContent
+//   const question = xml.querySelector("question")?.textContent
+//   const steps = xml.querySelector("steps")?.textContent
+//   const finalAnswer = xml.querySelector("final_answer")?.textContent
+
+//   return { scratchpad, question, steps, finalAnswer }
+// }
