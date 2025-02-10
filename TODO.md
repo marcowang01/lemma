@@ -2,6 +2,12 @@
 ## Immediate
 - UI revamp
 - generate separaters for each step
+- add API key settings page
+- add button for click here for early access
+- hook up to vercel postgres?
+
+
+
 - Follow-up questions capability
   - hover to follow up
 - use Gemini for OCR

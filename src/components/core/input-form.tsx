@@ -136,6 +136,7 @@ export function InputForm({
   }
 
   // TODO: refactor each input into a component 
+  // TODO: add form validation and typing via Zod and RHF
   return (
     <form
       ref={formRef}
