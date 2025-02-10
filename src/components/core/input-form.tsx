@@ -135,6 +135,7 @@ export function InputForm({
     }
   }
 
+  // TODO: refactor each input into a component and pass in props
   return (
     <form
       ref={formRef}
