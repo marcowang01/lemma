@@ -28,7 +28,6 @@ const Card = ({
     <div
       className={cn(
         "bg-light-gray/50 flex flex-col gap-2 overflow-hidden rounded-[20px] border border-black",
-        isCollapsed && "bg-neutral/30 border-neutral",
         className
       )}
       style={{
@@ -44,7 +43,9 @@ const Card = ({
           <Badge
             className={cn(
               "text-md transition-colors duration-300 ease-in-out",
-              isCollapsed && "border-neutral bg-neutral"
+              isCollapsed
+                ? "border-neutral bg-neutral hover:bg-primary-yellow hover:border-primary-yellow"
+                : "hover:bg-secondary-yellow hover:border-secondary-yellow"
             )}
           >
             {badgeText}
