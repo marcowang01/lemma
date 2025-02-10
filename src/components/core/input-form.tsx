@@ -8,7 +8,6 @@ import { UploadIcon } from "@/svg/uploadIcon"
 import { X as XIcon } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
-
 export function InputForm({
   onSubmit,
   disabled,
@@ -121,6 +120,7 @@ export function InputForm({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    // TODO: do validation here
     if (!userInput && !imageUrl) {
       return
     }
@@ -135,7 +135,7 @@ export function InputForm({
     }
   }
 
-  // TODO: refactor each input into a component 
+  // TODO: refactor each input into a component
   // TODO: add form validation and typing via Zod and RHF
   return (
     <form

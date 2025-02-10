@@ -1,3 +1,4 @@
+import { FormProvider } from "@/app/context/form-context"
 import localFont from "next/font/local"
 import "./globals.css"
 
@@ -35,7 +36,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable} ${AppleGaramond.variable}`}>
-        <div className="cream-radial-gradient h-screen w-screen">{children}</div>
+        <FormProvider>
+          <div className="cream-radial-gradient h-screen w-screen">{children}</div>
+        </FormProvider>
       </body>
     </html>
   )
