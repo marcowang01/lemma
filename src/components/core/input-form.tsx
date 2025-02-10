@@ -19,10 +19,12 @@ export function InputForm({
   const [userInput, setUserInput] = useState<string>("")
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [reasoningEnabled, setReasoningEnabled] = useState(false)
+
   const formRef = useRef<HTMLFormElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
-
+  const reasoningCheckboxRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto"
@@ -118,6 +120,13 @@ export function InputForm({
     await onSubmit(e)
   }
 
+  const handleReasoningToggle = () => {
+    const checkbox = reasoningCheckboxRef.current
+    if (checkbox) {
+      checkbox.toggleAttribute("checked")
+    }
+  }
+
   return (
     <form
       ref={formRef}
@@ -155,12 +164,21 @@ export function InputForm({
         id="photo-upload"
         disabled={disabled}
       />
+      <input
+        className="hidden"
+        type="checkbox"
+        name="reasoningEnabled"
+        id="reasoning-enabled"
+        checked={reasoningEnabled}
+        onChange={(e) => setReasoningEnabled(e.target.checked)}
+        ref={reasoningCheckboxRef}
+      />
       <div className="flex h-full w-full flex-col items-end justify-between gap-2 rounded-xl bg-transparent p-4">
         <textarea
           ref={textareaRef}
           className={cn(
             cn(
-              "w-full resize-none rounded bg-transparent p-2",
+              "h-full w-full grow resize-none rounded bg-transparent p-2",
               "placeholder:text-natural font-sans text-2xl font-light",
               "ring-offset-background",
               "placeholder:italic",
@@ -199,7 +217,19 @@ export function InputForm({
             <UploadIcon width={22} height={22} />
           </label>
           <div className="flex items-center justify-end gap-6">
-            <Badge>Reasoning</Badge>
+            <label htmlFor="reasoning-enabled">
+              <Badge
+                className={cn(
+                  "cursor-pointer select-none hover:opacity-80",
+                  reasoningEnabled
+                    ? "bg-primary-yellow text-black"
+                    : "border-dark-gray bg-transparent"
+                )}
+                onClick={handleReasoningToggle}
+              >
+                Reasoning
+              </Badge>
+            </label>
             <button
               type="submit"
               className="h-fit rounded-lg text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
