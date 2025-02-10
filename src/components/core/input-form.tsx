@@ -143,29 +143,12 @@ export function InputForm({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={cn("flex w-full flex-col gap-4 transition-all duration-200")}
+      className={cn("flex w-full flex-col gap-4 transition-all duration-300")}
       style={{
         height: height,
         overflow: "hidden",
       }}
     >
-      {/* <div
-        className={`overflow-hidden ${isDragging ? "ring-2 ring-primary" : ""}`}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        <div className="relative h-[200px] w-full p-0">
-          <ImageUpload
-            imageUrl={imageUrl}
-            fileInputRef={fileInputRef}
-            onImageChange={handleImageChange}
-            onClearImage={handleClearImage}
-            onImageClick={() => setIsModalOpen(true)}
-            disabled={disabled}
-          />
-        </div>
-      </div> */}
       <input
         ref={fileInputRef}
         type="file"
@@ -243,7 +226,11 @@ export function InputForm({
           }}
           disabled={disabled}
         />
-        <div className="flex w-full items-center justify-between">
+        <div
+          className={cn("flex w-full items-center justify-between", {
+            "justify-end": imageUrl,
+          })}
+        >
           <label
             className={cn(
               "text-dark-gray hover:text-dark-dark-gray ml-4 cursor-pointer transition-colors duration-200",
@@ -253,7 +240,6 @@ export function InputForm({
           >
             <UploadIcon width={22} height={22} />
           </label>
-
           <div className="flex items-center justify-end gap-6">
             <label htmlFor="reasoning-enabled">
               <Badge
