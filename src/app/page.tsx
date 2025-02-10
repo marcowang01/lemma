@@ -5,7 +5,7 @@ import { InputForm } from "@/components/core/input-form"
 import { cn } from "@/lib/utils"
 import { marked } from "marked"
 import { useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useFormContext } from "./context/form-context"
 
 export enum QuestionType {
@@ -38,7 +38,7 @@ export default function HomePage() {
 
   return (
     <main className="flex-col items-center justify-center">
-      <h1 className="font-appleGaramond flex flex-col items-center text-9xl font-light italic tracking-tight">
+      <h1 className="flex flex-col items-center font-appleGaramond text-9xl font-light italic tracking-tight">
         lemma
       </h1>
       <div className="mt-24 w-full">
