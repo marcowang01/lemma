@@ -5,7 +5,7 @@ import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/ui
 import { cn } from "@/lib/utils"
 import { SendIcon } from "@/svg/sendIcon"
 import { UploadIcon } from "@/svg/uploadIcon"
-import { X } from "lucide-react"
+import { X as XIcon } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 
@@ -222,15 +222,24 @@ export function InputForm({
               <UploadIcon width={22} height={22} />
             </label>
             {imageUrl && (
-              <Image
-                src={imageUrl}
-                alt="Math problem"
-                objectFit="cover"
-                className="aspect-square cursor-pointer rounded-lg transition-opacity duration-200 hover:opacity-80"
-                onClick={() => setIsModalOpen(true)}
-                width={50}
-                height={50}
-              />
+              <div className="relative">
+                <Image
+                  src={imageUrl}
+                  alt="Math problem"
+                  objectFit="cover"
+                  className="aspect-square cursor-pointer rounded-lg transition-opacity duration-200 hover:opacity-80"
+                  onClick={() => setIsModalOpen(true)}
+                  width={50}
+                  height={50}
+                />
+                <button
+                  type="button"
+                  onClick={handleClearImage}
+                  className="bg-primary-yellow absolute -right-2 -top-2 rounded-full p-1 text-black shadow-sm hover:opacity-70"
+                >
+                  <XIcon className="h-3 w-3" />
+                </button>
+              </div>
             )}
           </div>
 
@@ -273,7 +282,7 @@ export function InputForm({
             />
           </div>
           <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 outline-none transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 disabled:pointer-events-none">
-            <X className="h-4 w-4" />
+            <XIcon className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </DialogClose>
         </DialogContent>
