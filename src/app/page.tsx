@@ -23,7 +23,7 @@ export default function Chat() {
   const [solutionText, setSolutionText] = useState<string>("")
   const [reasoningText, setReasoningText] = useState<string>(``)
   const [isThinking, setIsThinking] = useState<boolean>(false)
-  const [questionType, setQuestionType] = useState<QuestionType>(QuestionType.HOMEWORK_HELP)
+  const [questionType, setQuestionType] = useState<QuestionType | null>(null)
   const stepIdx = useRef(0)
 
   useEffect(() => {
@@ -95,17 +95,13 @@ export default function Chat() {
     setIsThinking(false)
   }
 
-  const handleQuestionTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuestionType(e.target.value as QuestionType)
-  }
-
   return (
-    <main className="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center justify-center px-4 py-8">
+    <main className="mx-auto flex h-full w-full max-w-[1050px] flex-col items-center justify-center px-4 py-8">
       <h1 className="font-appleGaramond flex flex-col items-center text-9xl font-light italic tracking-tight">
         lemma
       </h1>
       <div className="mt-24 w-full">
-        <div className="flex items-center justify-start gap-4">
+        <div className="hidden items-center justify-start gap-4 md:flex">
           {Object.values(QuestionType).map((type) => (
             <Badge
               key={`${type}-badge`}
