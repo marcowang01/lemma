@@ -86,9 +86,12 @@ export default function Chat() {
   }
 
   return (
-    <main className="container mx-auto max-w-4xl p-4">
-      <div className="grid gap-8 md:grid-cols-1">
+    <main className="mx-auto flex h-full w-full max-w-[1000px] flex-col items-center justify-center px-4 py-8">
+      <h1 className="flex flex-col items-center text-9xl italic">Lemma</h1>
+      <div className="mb-48 mt-24 h-80 w-full rounded-xl border border-black bg-gray-100 opacity-50">
         <InputForm onSubmit={handleSubmit} disabled={isThinking} />
+      </div>
+      <div className="grid gap-8 md:grid-cols-1">
         {reasoningText && <CollapsibleReasoning text={reasoningText} />}
         {solutionText && (
           <Card className="overflow-hidden">

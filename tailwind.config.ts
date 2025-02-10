@@ -14,6 +14,9 @@ export default {
           "radial-gradient(circle at center, #FEF6CC 0%, #EAE8DD 69%, #F5F5F5 100%)",
       },
       colors: {
+        gray: {
+          100: "#EFEFEF",
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
