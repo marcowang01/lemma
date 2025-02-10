@@ -1,7 +1,7 @@
 "use client"
 
 import { Badge } from "@/components/core/badge"
-import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { SendIcon } from "@/svg/sendIcon"
 import { UploadIcon } from "@/svg/uploadIcon"
@@ -21,11 +21,13 @@ export function InputForm({
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [reasoningEnabled, setReasoningEnabled] = useState(false)
+  const [height, setHeight] = useState("20rem")
 
   const formRef = useRef<HTMLFormElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const reasoningCheckboxRef = useRef<HTMLInputElement>(null)
+
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto"
@@ -35,6 +37,11 @@ export function InputForm({
   }, [userInput])
 
   useEffect(() => {
+    if (formRef.current) {
+      const newHeight = imageUrl ? "31rem" : "20rem"
+      setHeight(newHeight)
+    }
+
     return () => {
       if (imageUrl) {
         URL.revokeObjectURL(imageUrl)
@@ -136,7 +143,11 @@ export function InputForm({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={cn("flex w-full flex-col gap-4", imageUrl ? "h-120" : "h-80")}
+      className={cn("flex w-full flex-col gap-4 transition-all duration-200")}
+      style={{
+        height: height,
+        overflow: "hidden",
+      }}
     >
       {/* <div
         className={`overflow-hidden ${isDragging ? "ring-2 ring-primary" : ""}`}
@@ -182,7 +193,7 @@ export function InputForm({
                 src={imageUrl}
                 alt="Math problem"
                 objectFit="fit"
-                className="h-40 w-auto cursor-pointer rounded-lg transition-opacity duration-200 hover:opacity-80"
+                className="mb-4 h-40 w-auto cursor-pointer rounded-lg transition-opacity duration-200 hover:opacity-80"
                 onClick={() => setIsModalOpen(true)}
                 width={50}
                 height={50}
@@ -268,7 +279,7 @@ export function InputForm({
         </div>
       </div>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-natural m-0 max-w-[50%] border-0 px-4 pb-4 pt-12 outline-none">
+        <DialogContent className="bg-natural m-0 max-w-[70%] border-0 p-0 outline-none">
           <div hidden>
             <DialogTitle>Uploaded Image</DialogTitle>
           </div>
@@ -281,10 +292,6 @@ export function InputForm({
               height={1000}
             />
           </div>
-          <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 outline-none transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 disabled:pointer-events-none">
-            <XIcon className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-          </DialogClose>
         </DialogContent>
       </Dialog>
     </form>
