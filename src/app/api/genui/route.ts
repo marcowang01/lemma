@@ -4,6 +4,9 @@ import { transform } from "@babel/standalone"
 import { ToolMessage } from "@langchain/core/messages"
 import { getFirstFromTag } from "./utils"
 export async function POST(req: Request) {
+  throw new Error("Not implemented")
+
+  /*
   const formData = await req.formData()
   const userPrompt = formData.get("userInput") as string
   const imageInput = formData.get("imageInput") as File
@@ -15,7 +18,6 @@ export async function POST(req: Request) {
   const wolframAlphaTool = getWolframAlphaTool()
   const llmWithTools = getLlmClient().bindTools([wolframAlphaTool])
 
-  let textContent = ""
   while (true) {
     const response = await llmWithTools.invoke(conversation)
     console.log(`genui llm response: ${JSON.stringify(response, null, 2)}`)
@@ -76,6 +78,7 @@ export async function POST(req: Request) {
   const code = transformCode(llmCode ?? "")
   console.log(`final code: ${code}`)
   return Response.json({ code: code })
+  */
 }
 
 function transformCode(code: string): string {
